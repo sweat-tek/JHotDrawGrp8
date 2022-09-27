@@ -102,6 +102,7 @@ public class SVGApplet extends JApplet {
      *
      * @see #loadDrawing
      */
+
     @Override
     public final void init() {
         // set the language of the applet
