@@ -8,6 +8,13 @@
 	<organization>
 		<name>JHotDraw</name>
 	</organization>
+	<repositories>
+		<repository>
+			<id>git-corfixen</id>
+			<name>corfixen's Git based repo</name>
+			<url>https://maven.pkg.github.com/sweat-tek/MavenRepository/</url>
+		</repository>
+	</repositories>
 	<licenses>
 		<license>
 			<name>GNU Library or Lesser General Public License (LGPL) V2.1</name>
