@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.samples.svg.io;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.CompositeFigure;
 import java.awt.Color;
@@ -135,7 +134,7 @@ public class DefaultSVGFigureFactory implements SVGFigureFactory {
         return figure;
     }
 
-    @FeatureEntryPoint(value = "DefaultSVGFigureFactory")
+    // @FeatureEntryPoint(value = "DefaultSVGFigureFactory")
     @Override
     public Figure createTextArea(double x, double y, double w, double h, StyledDocument doc, Map<AttributeKey<?>, Object> attributes) {
         SVGTextAreaFigure figure = new SVGTextAreaFigure();
