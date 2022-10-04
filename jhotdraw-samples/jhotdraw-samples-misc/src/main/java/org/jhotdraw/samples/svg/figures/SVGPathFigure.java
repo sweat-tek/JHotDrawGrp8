@@ -59,13 +59,13 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     /**
      * Creates a new instance.
      */
-    @FeatureEntryPoint(value = "LineTool")
+    @FeatureEntryPoint(value = "lineTool")
     public SVGPathFigure() {
         add(new SVGBezierFigure());
         SVGAttributeKeys.setDefaults(this);
     }
 
-    @FeatureEntryPoint(value = "LineTool")
+    @FeatureEntryPoint(value = "lineTool")
     public SVGPathFigure(boolean isEmpty) {
         if (!isEmpty) {
             add(new SVGBezierFigure());
@@ -74,6 +74,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         setConnectable(false);
     }
 
+    @FeatureEntryPoint(value="lineTool")
     @Override
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
@@ -108,6 +109,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         }
     }
 
+    @FeatureEntryPoint(value="lineTool")
     @Override
     public void drawFigure(Graphics2D g) {
         AffineTransform savedTransform = null;
@@ -419,6 +421,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.openPath.text")) {
                 private static final long serialVersionUID = 1L;
 
+                @FeatureEntryPoint(value = "lineTool")
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -433,6 +436,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.closePath.text")) {
                 private static final long serialVersionUID = 1L;
 
+                @FeatureEntryPoint(value = "lineTool")
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -448,6 +452,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.windingRule.evenOdd.text")) {
                 private static final long serialVersionUID = 1L;
 
+                @FeatureEntryPoint(value = "lineTool")
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
