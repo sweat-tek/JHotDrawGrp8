@@ -7,7 +7,6 @@
  */
 package org.jhotdraw.samples.svg.gui;
 
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.gui.action.ButtonFactory;
 import org.jhotdraw.gui.plaf.palette.PaletteFormattedTextFieldUI;
 import org.jhotdraw.gui.plaf.palette.PaletteButtonUI;
@@ -48,7 +47,6 @@ public class FillToolBar extends AbstractToolBar {
     /**
      * Creates new instance.
      */
-    @FeatureEntryPoint("fillpalette")
     public FillToolBar() {
         ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         setName(labels.getString(getID() + ".toolbar"));
@@ -68,7 +66,6 @@ public class FillToolBar extends AbstractToolBar {
     }
 
     @Override
-    @FeatureEntryPoint("filltool")
     protected JComponent createDisclosedComponent(int state) {
         JPanel p = null;
         switch (state) {
@@ -125,7 +122,7 @@ public class FillToolBar extends AbstractToolBar {
                 opacitySlider.setScaleFactor(100d);
                 disposables.add(new FigureAttributeEditorHandler<Double>(FILL_OPACITY, opacitySlider, editor));
 
-            break;
+                break;
             case 2:
                 p = new JPanel();
                 p.setOpaque(false);
@@ -223,7 +220,7 @@ public class FillToolBar extends AbstractToolBar {
                 gbc.anchor = GridBagConstraints.FIRST_LINE_START;
                 p.add(p3, gbc);
 
-            break;
+                break;
         }
         return p;
     }
