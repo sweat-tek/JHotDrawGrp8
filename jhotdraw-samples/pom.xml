@@ -12,4 +12,35 @@
         <module>jhotdraw-samples-mini</module>
         <module>jhotdraw-samples-misc</module>
     </modules>
+    <repositories>
+        <!--
+        Repository hosting NetBeans modules, especially APIs.
+        Versions are based on IDE releases, e.g.: RELEASE691
+        To create your own repository, use: nbm:populate-repository
+        -->
+        <!--
+        <repository>
+            <id>git-corfixen</id>
+            <name>corfixen's Git based repo</name>
+            <url>https://github.com/sweat-tek/MavenRepository/raw/repository/</url>
+        </repository>
+        -->
+        <repository>
+            <id>github</id>
+            <name>Github external Packages</name>
+            <url>https://maven.pkg.github.com/sweat-tek/MavenRepository/</url>
+        </repository>
+    </repositories>
+    <dependencies>
+        <dependency>
+            <groupId>dk.sdu.mmmi</groupId>
+            <artifactId>featuretracer</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.6</version>
+        </dependency>
+    </dependencies>
 </project>
