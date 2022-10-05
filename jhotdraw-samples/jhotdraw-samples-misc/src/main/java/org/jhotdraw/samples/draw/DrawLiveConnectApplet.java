@@ -8,6 +8,7 @@
 package org.jhotdraw.samples.draw;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.geom.*;
 import java.io.*;
 import java.net.*;
@@ -248,7 +249,7 @@ public class DrawLiveConnectApplet extends JApplet {
             getDrawing().add(tf);
         }
     }//GEN-LAST:event_save
-    private void load(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_load
+    private void load(ActionEvent evt) {//GEN-FIRST:event_load
         try {
             String methodName = getParameter("dataread");
             if (methodName.indexOf('(') > 0) {

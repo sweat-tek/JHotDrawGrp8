@@ -27,7 +27,7 @@ public class RectangleFigure extends AbstractAttributedFigure {
      * Creates a new instance.
      */
     public RectangleFigure() {
-        this(0, 0, 0, 0);
+        this(0, 0, 1000, 1000);
     }
 
     public RectangleFigure(double x, double y, double width, double height) {
