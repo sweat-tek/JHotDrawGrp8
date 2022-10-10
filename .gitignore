@@ -1,8 +1,14 @@
 /jhotdraw7/build/
 /jhotdraw7/dist/
 /jhotdraw7/nbproject/private/
+/JHotDrawGrp8/jhotdraw-samples/jhotdraw-samples-misc/FeatureTraces/
+/JHotDrawGrp8/.idea/misc.xml
 target
 *.patch
 *.class
 nb-configuration.xml
 *.*~
+
+.DS_Store
+
+.Idea

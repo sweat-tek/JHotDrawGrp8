@@ -145,4 +145,11 @@
 	 <module>jhotdraw-datatransfer</module>
 	 <module>jhotdraw-actions</module>
 	</modules>
+	<repositories>
+		<repository>
+			<id>github</id>
+			<name>Github external package</name>
+			<url>https://maven.pkg.github.com/sweat-tek/MavenRepository</url>
+		</repository>
+	</repositories>
 </project>
