@@ -10,4 +10,8 @@ nb-configuration.xml
 *.*~
 **/.idea/
 **/*.iml
+
 .DS_Store
+
+.idea
+/jhotdraw-samples/jhotdraw-samples-misc/FeatureTraces/
