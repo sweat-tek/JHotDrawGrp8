@@ -8,7 +8,6 @@ target
 *.class
 nb-configuration.xml
 *.*~
-
+**/.idea/
+**/*.iml
 .DS_Store
-
-.Idea
