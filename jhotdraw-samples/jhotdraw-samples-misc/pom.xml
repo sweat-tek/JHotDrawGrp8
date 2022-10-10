@@ -8,6 +8,18 @@
 	</parent>
 	<artifactId>jhotdraw-samples-misc</artifactId>
 	<packaging>jar</packaging>
+	<repositories>
+		<!--
+        Repository hosting NetBeans modules, especially APIs.
+        Versions are based on IDE releases, e.g.: RELEASE691
+        To create your own repository, use: nbm:populate-repository
+        -->
+		<repository>
+			<id>github</id>
+			<name>GitHub external Packages</name>
+			<url>https://maven.pkg.github.com/sweat-tek/MavenRepository</url>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -32,12 +44,12 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>1.8.6</version>
+			<version>1.9.9</version>
 		</dependency>
-	 <dependency>
-	  <groupId>${project.groupId}</groupId>
-	  <artifactId>jhotdraw-app</artifactId>
-	  <version>${project.version}</version>
-	 </dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>jhotdraw-app</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -134,6 +134,7 @@ public class DefaultSVGFigureFactory implements SVGFigureFactory {
         return figure;
     }
 
+    // @FeatureEntryPoint(value = "DefaultSVGFigureFactory")
     @Override
     public Figure createTextArea(double x, double y, double w, double h, StyledDocument doc, Map<AttributeKey<?>, Object> attributes) {
         SVGTextAreaFigure figure = new SVGTextAreaFigure();
