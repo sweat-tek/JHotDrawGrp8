@@ -109,7 +109,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         }
     }
 
-    @FeatureEntryPoint(value="lineTool")
     @Override
     public void drawFigure(Graphics2D g) {
         AffineTransform savedTransform = null;
@@ -362,6 +361,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
 
     @Override
+    @FeatureEntryPoint(value="lineTool")
     public Collection<Action> getActions(Point2D.Double p) {
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
@@ -421,7 +421,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.openPath.text")) {
                 private static final long serialVersionUID = 1L;
 
-                @FeatureEntryPoint(value = "lineTool")
+
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -436,7 +436,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.closePath.text")) {
                 private static final long serialVersionUID = 1L;
 
-                @FeatureEntryPoint(value = "lineTool")
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -452,7 +451,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.windingRule.evenOdd.text")) {
                 private static final long serialVersionUID = 1L;
 
-                @FeatureEntryPoint(value = "lineTool")
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -484,6 +482,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * Handles a mouse click.
      */
     @Override
+    @FeatureEntryPoint(value="lineTool")
     public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
         if (evt.getClickCount() == 2 && view.getHandleDetailLevel() % 2 == 0) {
             for (Figure child : getChildren()) {
