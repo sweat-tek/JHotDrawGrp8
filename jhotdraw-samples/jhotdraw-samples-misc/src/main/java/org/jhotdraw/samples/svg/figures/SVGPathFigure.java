@@ -437,6 +437,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 private static final long serialVersionUID = 1L;
 
                 @Override
+                @FeatureEntryPoint(value="lineTool")
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
                     for (Figure child : getChildren()) {
@@ -452,6 +453,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 private static final long serialVersionUID = 1L;
 
                 @Override
+                @FeatureEntryPoint(value="lineTool")
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
                     getDrawing().fireUndoableEditHappened(
