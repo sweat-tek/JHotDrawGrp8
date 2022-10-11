@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [ "develop" ]
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
 jobs:
   build:
     runs-on: ubuntu-latest
