@@ -348,6 +348,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
         return handles;
     }
 
+    @FeatureEntryPoint(value = "cloneRectangleInstance")
     // CLONING
     @Override
     public SVGRectFigure clone() {

@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.draw.tool;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.CompositeFigure;
 import java.awt.*;
@@ -186,6 +187,7 @@ public class CreationTool extends AbstractTool {
         }
     }
 
+    @FeatureEntryPoint("CreationToolActivated")
     @Override
     public void mousePressed(MouseEvent evt) {
         super.mousePressed(evt);
@@ -201,6 +203,7 @@ public class CreationTool extends AbstractTool {
         getDrawing().add(createdFigure);
     }
 
+    @FeatureEntryPoint(value = "CreationToolMouseDragged")
     @Override
     public void mouseDragged(MouseEvent evt) {
         if (createdFigure != null) {
@@ -213,6 +216,7 @@ public class CreationTool extends AbstractTool {
         }
     }
 
+    @FeatureEntryPoint(value = "CreationToolMouseReleased")
     @Override
     public void mouseReleased(MouseEvent evt) {
         if (createdFigure != null) {
