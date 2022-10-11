@@ -51,8 +51,8 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     public SVGEllipseFigure() {
         this(0, 0, 0, 0);
     }
-    @FeatureEntryPoint(value = "EllipseTool")
 
+    @FeatureEntryPoint(value = "Ellipse")
     public SVGEllipseFigure(double x, double y, double width, double height) {
         ellipse = new Ellipse2D.Double(x, y, width, height);
         SVGAttributeKeys.setDefaults(this);
@@ -67,8 +67,8 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         }
     }
 
-    @FeatureEntryPoint(value="EllipseTool")
     @Override
+    @FeatureEntryPoint(value = "Ellipse")
     protected void drawStroke(Graphics2D g) {
         if (ellipse.width > 0 && ellipse.height > 0) {
             g.draw(ellipse);
