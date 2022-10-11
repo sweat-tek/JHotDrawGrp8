@@ -361,7 +361,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
 
     @Override
-    @FeatureEntryPoint(value="lineTool")
     public Collection<Action> getActions(Point2D.Double p) {
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
