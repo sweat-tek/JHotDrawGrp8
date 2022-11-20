@@ -14,7 +14,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.prefs.Preferences;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.text.DefaultFormatter;
@@ -106,32 +105,7 @@ public class ColorFormatter extends DefaultFormatter {
      * Specifies the last used input format.
      */
     protected Format lastUsedInputFormat = null;
-    /**
-     * This regular expression is used for parsing the RGB_HEX format.
-     */
-    protected static final Pattern RGB_HEX_PATTERN = Pattern.compile("^\\s*(?:[rR][gG][bB]\\s*#|#)\\s*([0-9a-fA-F]{3,6})\\s*$");
-    /**
-     * This regular expression is used for parsing the RGB_INTEGER format.
-     */
-    protected static final Pattern RGB_INTEGER_SHORT_PATTERN = Pattern.compile("^\\s*([0-9]{1,3})(?:\\s*,\\s*|\\s+)([0-9]{1,3})(?:\\s*,\\s*|\\s+)([0-9]{1,3})\\s*$");
-    /**
-     * This regular expression is used for parsing the RGB_INTEGER format.
-     */
-    protected static final Pattern RGB_INTEGER_PATTERN = Pattern.compile("^\\s*(?:[rR][gG][bB])?\\s*([0-9]{1,3})(?:\\s*,\\s*|\\s+)([0-9]{1,3})(?:\\s*,\\s*|\\s+)([0-9]{1,3})\\s*$");
-    /**
-     * This regular expression is used for parsing the RGB_PERCENTAGE format.
-     */
-    protected static final Pattern RGB_PERCENTAGE_PATTERN = Pattern.compile("^\\s*(?:[rR][gG][bB][%])?\\s*([0-9]{1,3}(?:\\.[0-9]+)?)(?:\\s*,\\s*|\\s+)([0-9]{1,3}(?:\\.[0-9]+)?)(?:\\s*,\\s*|\\s+)([0-9]{1,3}(?:\\.[0-9]+)?)\\s*$");
-    /**
-     * This regular expression is used for parsing the HSB_PERCENTAGE format.
-     * This format is recognized when the degree sign is present.
-     */
-    protected static final Pattern HSB_PERCENTAGE_PATTERN = Pattern.compile("^\\s*(?:[hH][sS][bB])?\\s*([0-9]{1,3}(?:\\.[0-9]+)?)(?:\\s*,\\s*|\\s+)([0-9]{1,3}(?:\\.[0-9]+)?)(?:\\s*,\\s*|\\s+)([0-9]{1,3}(?:\\.[0-9]+)?)\\s*$");
-    /**
-     * This regular expression is used for parsing the GRAY_PERCENTAGE format.
-     * This format is recognized when the degree sign is present.
-     */
-    protected static final Pattern GRAY_PERCENTAGE_PATTERN = Pattern.compile("^\\s*(?:[gG][rR][aA][yY])?\\s*([0-9]{1,3}(?:\\.[0-9]+)?)\\s*$");
+
     /**
      * Specifies whether the formatter allows null values.
      */
@@ -236,7 +210,7 @@ public class ColorFormatter extends DefaultFormatter {
         return isAdaptive;
     }
 
-    private void setLastUsedInputFormat(Format newValue) {
+    protected void setLastUsedInputFormat(Format newValue) {
         lastUsedInputFormat = newValue;
         if (isAdaptive) {
             outputFormat = lastUsedInputFormat;
@@ -254,116 +228,45 @@ public class ColorFormatter extends DefaultFormatter {
                 throw new ParseException("Null value is not allowed.", 0);
             }
         }
+
         // Format RGB_HEX
-        Matcher matcher = RGB_HEX_PATTERN.matcher(str);
-        if (matcher.matches()) {
-            setLastUsedInputFormat(Format.RGB_HEX);
-            try {
-                String group1 = matcher.group(1);
-                if (group1.length() == 3) {
-                    return new Color(Integer.parseInt(
-                            "" + group1.charAt(0) + group1.charAt(0)
-                            + group1.charAt(1) + group1.charAt(1)
-                            + group1.charAt(2) + group1.charAt(2),
-                            16));
-                } else if (group1.length() == 6) {
-                    return new Color(Integer.parseInt(group1, 16));
-                } else {
-                    throw new ParseException("Hex color must have 3 or 6 digits.", 1);
-                }
-            } catch (NumberFormatException nfe) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(nfe);
-                throw pe;
-            }
+        RgbHexMatcher rgbHexMatcher = new RgbHexMatcher(str, this);
+        if (rgbHexMatcher.matches()) {
+            return rgbHexMatcher.getColor();
         }
-        // Format RGB_INTEGER_SHORT and RGB_INTEGER
-        matcher = RGB_INTEGER_SHORT_PATTERN.matcher(str);
-        if (matcher.matches()) {
-            setLastUsedInputFormat(Format.RGB_INTEGER_SHORT);
-        } else {
-            matcher = RGB_INTEGER_PATTERN.matcher(str);
-            if (matcher.matches()) {
-                setLastUsedInputFormat(Format.RGB_INTEGER);
-            }
+
+        // Format RGB_INTEGER
+        RgbIntegerShortMatcher rgbIntegerShortMatcher = new RgbIntegerShortMatcher(str, this);
+        if (rgbIntegerShortMatcher.matches()) {
+            return rgbIntegerShortMatcher.getColor();
         }
-        if (matcher.matches()) {
-            try {
-                return new Color(
-                        Integer.parseInt(matcher.group(1)),
-                        Integer.parseInt(matcher.group(2)),
-                        Integer.parseInt(matcher.group(3)));
-            } catch (NumberFormatException nfe) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(nfe);
-                throw pe;
-            } catch (IllegalArgumentException iae) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(iae);
-                throw pe;
-            }
+
+        // Format RGB_INTEGER
+        RgbIntegerMatcher rgbIntegerMatcher = new RgbIntegerMatcher(str, this);
+        if (rgbIntegerMatcher.matches()) {
+            return rgbIntegerMatcher.getColor();
         }
+
         // Format RGB_PERCENTAGE
-        matcher = RGB_PERCENTAGE_PATTERN.matcher(str);
-        if (matcher.matches()) {
-            setLastUsedInputFormat(Format.RGB_PERCENTAGE);
-            try {
-                return new Color(
-                        numberFormat.parse(matcher.group(1)).floatValue() / 100f,
-                        numberFormat.parse(matcher.group(2)).floatValue() / 100f,
-                        numberFormat.parse(matcher.group(3)).floatValue() / 100f);
-            } catch (NumberFormatException nfe) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(nfe);
-                throw pe;
-            } catch (IllegalArgumentException iae) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(iae);
-                throw pe;
-            }
+        RgbPercentageMatcher rgbPercentageMatcher = new RgbPercentageMatcher(str, this);
+        if (rgbPercentageMatcher.matches()) {
+            return rgbPercentageMatcher.getColor();
         }
+
         // Format HSB_PERCENTAGE
-        matcher = HSB_PERCENTAGE_PATTERN.matcher(str);
-        if (matcher.matches()) {
-            setLastUsedInputFormat(Format.HSB_PERCENTAGE);
-            try {
-                return new Color(HSBColorSpace.getInstance(),
-                        new float[]{
-                            matcher.group(1) == null ? 0f : numberFormat.parse(matcher.group(1)).floatValue() / 360f,
-                            matcher.group(2) == null ? 1f : numberFormat.parse(matcher.group(2)).floatValue() / 100f,
-                            matcher.group(3) == null ? 1f : numberFormat.parse(matcher.group(3)).floatValue() / 100f},
-                        1f);
-            } catch (NumberFormatException nfe) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(nfe);
-                throw pe;
-            } catch (IllegalArgumentException iae) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(iae);
-                throw pe;
-            }
+        HsbPercentageMatcher hsbPercentageMatcher = new HsbPercentageMatcher(str, this);
+        if (rgbPercentageMatcher.matches()) {
+            return hsbPercentageMatcher.getColor();
         }
+
         // Format GRAY_PERCENTAGE
-        matcher = GRAY_PERCENTAGE_PATTERN.matcher(str);
-        if (matcher.matches()) {
-            setLastUsedInputFormat(Format.GRAY_PERCENTAGE);
-            try {
-                return ColorUtil.toColor(ColorSpace.getInstance(ColorSpace.CS_GRAY),
-                        new float[]{
-                            matcher.group(1) == null ? 0f : numberFormat.parse(matcher.group(1)).floatValue() / 100f}
-                );
-            } catch (NumberFormatException nfe) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(nfe);
-                throw pe;
-            } catch (IllegalArgumentException iae) {
-                ParseException pe = new ParseException(str, 0);
-                pe.initCause(iae);
-                throw pe;
-            }
+        GrayPercentageMatcher grayPercentageMatcher = new GrayPercentageMatcher(str, this);
+        if (grayPercentageMatcher.matches()) {
+            return grayPercentageMatcher.getColor();
         }
-        throw new ParseException(str, 0);
+        throw new ParseException("Not found", 0);
     }
+
 
     @Override
     public String valueToString(Object value) throws ParseException {
