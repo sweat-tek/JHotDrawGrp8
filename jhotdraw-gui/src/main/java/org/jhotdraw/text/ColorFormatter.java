@@ -235,7 +235,7 @@ public class ColorFormatter extends DefaultFormatter {
             return rgbHexMatcher.getColor();
         }
 
-        // Format RGB_INTEGER
+        // Format RGB_SHORT_INTEGER
         RgbIntegerShortMatcher rgbIntegerShortMatcher = new RgbIntegerShortMatcher(str, this);
         if (rgbIntegerShortMatcher.matches()) {
             return rgbIntegerShortMatcher.getColor();
