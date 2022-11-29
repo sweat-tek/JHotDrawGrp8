@@ -1,5 +1,9 @@
 # jhotdraw
 
+Maven run: install exec:java -Dexec.mainClass=org.jhotdraw.samples.svg.Main -f pom.xml
+Working directory: jhotdraw-samples-misc
+VM options: -javaagent:<dir>/aspectjweaver/1.9.9/aspectjweaver-1.9.9.jar
+
 * maven build process
 * restructured project layout
   * introduced submodules

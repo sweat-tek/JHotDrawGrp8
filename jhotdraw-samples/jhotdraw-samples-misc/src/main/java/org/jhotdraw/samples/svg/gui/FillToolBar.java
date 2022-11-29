@@ -47,7 +47,7 @@ public class FillToolBar extends AbstractToolBar {
 
     @Override
     @FeatureEntryPoint("filltool")
-    protected JComponent createDisclosedComponent(int state) {
+    public JComponent createDisclosedComponent(int state) {
         Panel panel = new Panel();
         if (state == 1) {
             panel = new Panel1();
