@@ -81,28 +81,42 @@ public class PaletteSliderUI extends BasicSliderUI {
         int pad;
         Rectangle trackBounds = trackRect;
         if (slider.getOrientation() == JSlider.HORIZONTAL) {
-            pad = trackBuffer;
-            //cx = pad;
-            cy = (trackBounds.height / 2) - 2;
-            cw = trackBounds.width;
-            g.translate(trackBounds.x, trackBounds.y + cy);
-            g.setColor(getShadowColor());
-            g.drawLine(0, 0, cw - 1, 0);
-            g.drawLine(0, 1, 0, 2);
-            g.setColor(getHighlightColor());
-            g.drawLine(0, 3, cw, 3);
-            g.drawLine(cw, 0, cw, 3);
-            g.setColor(Color.black);
-            g.drawLine(1, 1, cw - 2, 1);
-            g.translate(-trackBounds.x, -(trackBounds.y + cy));
+            horizontalPaintTrack(g, trackBounds);
         } else {
-            pad = trackBuffer;
-            cx = (trackBounds.width / 2) - 2;
-            //cy = pad;
-            ch = trackBounds.height;
-            g.setColor(new Color(slider.isEnabled() ? 0x888888 : 0xaaaaaa));
-            g.drawRoundRect(trackBounds.x + cx, trackBounds.y, 5, ch, 5, 5);
+            verticalPainTrack(g, trackBounds);
         }
+    }
+
+    private void verticalPainTrack(Graphics g, Rectangle trackBounds) {
+        int ch;
+        int pad;
+        int cx;
+        pad = trackBuffer;
+        cx = (trackBounds.width / 2) - 2;
+        //cy = pad;
+        ch = trackBounds.height;
+        g.setColor(new Color(slider.isEnabled() ? 0x888888 : 0xaaaaaa));
+        g.drawRoundRect(trackBounds.x + cx, trackBounds.y, 5, ch, 5, 5);
+    }
+
+    private void horizontalPaintTrack(Graphics g, Rectangle trackBounds) {
+        int cy;
+        int cw;
+        int pad;
+        pad = trackBuffer;
+        //cx = pad;
+        cy = (trackBounds.height / 2) - 2;
+        cw = trackBounds.width;
+        g.translate(trackBounds.x, trackBounds.y + cy);
+        g.setColor(getShadowColor());
+        g.drawLine(0, 0, cw - 1, 0);
+        g.drawLine(0, 1, 0, 2);
+        g.setColor(getHighlightColor());
+        g.drawLine(0, 3, cw, 3);
+        g.drawLine(cw, 0, cw, 3);
+        g.setColor(Color.black);
+        g.drawLine(1, 1, cw - 2, 1);
+        g.translate(-trackBounds.x, -(trackBounds.y + cy));
     }
 
     @Override
@@ -133,70 +147,77 @@ public class PaletteSliderUI extends BasicSliderUI {
         if ((!slider.getPaintTicks() && paintThumbArrowShape == null)
                 || paintThumbArrowShape == Boolean.FALSE) {
             // "plain" version
-            LinearGradientPaint lgp = new LinearGradientPaint(
-                    new Point2D.Float(2, 2), new Point2D.Float(2, 2 + h - 4),
-                    stops, stopColors,
-                    MultipleGradientPaint.CycleMethod.REPEAT);
-            g.setPaint(lgp);
-            g.fillOval(2, 2, w - 4, h - 4);
-            g.setColor(new Color(0x444444));
-            g.drawOval(1, 1, w - 3, h - 3);
+            plainPaintThumb(g, w, h, stops, stopColors);
         } else if (slider.getOrientation() == JSlider.HORIZONTAL) {
             int cw = w / 2;
-            g.fillRect(1, 1, w - 3, h - 1 - cw);
-            Polygon p = new Polygon();
-            p.addPoint(1, h - cw);
-            p.addPoint(cw - 1, h - 1);
-            p.addPoint(w - 2, h - 1 - cw);
-            g.fillPolygon(p);
-            g.setColor(getHighlightColor());
-            g.drawLine(0, 0, w - 2, 0);
-            g.drawLine(0, 1, 0, h - 1 - cw);
-            g.drawLine(0, h - cw, cw - 1, h - 1);
-            g.setColor(Color.black);
-            g.drawLine(w - 1, 0, w - 1, h - 2 - cw);
-            g.drawLine(w - 1, h - 1 - cw, w - 1 - cw, h - 1);
-            g.setColor(getShadowColor());
-            g.drawLine(w - 2, 1, w - 2, h - 2 - cw);
-            g.drawLine(w - 2, h - 1 - cw, w - 1 - cw, h - 2);
+            int[] rect = {1, 1, w - 3, h - 1 - cw};
+            int[][] polygon = {{1, h - cw}, {cw - 1, h - 1}, {w - 2, h - 1 - cw}};
+            int[] left = {0, 0, w - 2, 0};
+            int[] top = {0, 1, 0, h - 1 - cw};
+            int[] topSlant = {0, h - cw, cw - 1, h - 1};
+            int[] bottom = {w - 1, 0, w - 1, h - 2 - cw};
+            int[] bottomSlant = {w - 1, h - 1 - cw, w - 1 - cw, h - 1};
+            int[] bottomShadow = {w - 2, 1, w - 2, h - 2 - cw};
+            int[] right = {w - 2, h - 1 - cw, w - 1 - cw, h - 2};
+            horizontalPaintThumb(g, rect, polygon, top, topSlant, bottomSlant, bottom, bottomShadow, right, left);
         } else {  // vertical
             int cw = h / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
-                g.fillRect(1, 1, w - 1 - cw, h - 3);
-                Polygon p = new Polygon();
-                p.addPoint(w - cw - 1, 0);
-                p.addPoint(w - 1, cw);
-                p.addPoint(w - 1 - cw, h - 2);
-                g.fillPolygon(p);
-                g.setColor(getHighlightColor());
-                g.drawLine(0, 0, 0, h - 2);                  // left
-                g.drawLine(1, 0, w - 1 - cw, 0);                 // top
-                g.drawLine(w - cw - 1, 0, w - 1, cw);              // top slant
-                g.setColor(Color.black);
-                g.drawLine(0, h - 1, w - 2 - cw, h - 1);             // bottom
-                g.drawLine(w - 1 - cw, h - 1, w - 1, h - 1 - cw);        // bottom slant
-                g.setColor(getShadowColor());
-                g.drawLine(1, h - 2, w - 2 - cw, h - 2);         // bottom
-                g.drawLine(w - 1 - cw, h - 2, w - 2, h - cw - 1);     // bottom slant
+                int[] rect = {1, 1, w - 1 - cw, h - 3};
+                int[][] polygon = {{w - cw - 1, 0}, {w - 1, cw}, {(w - 1 - cw, h - 2}};
+                int[] left = {0, 0, 0, h - 2};
+                int[] top = {1, 0, w - 1 - cw, 0};
+                int[] topSlant = {w - cw - 1, 0, w - 1, cw};
+                int[] bottom = {w - 1 - cw, h - 1, w - 1, h - 1 - cw};
+                int[] bottomSlant = {0, h - 1, w - 2 - cw, h - 1};
+                int[] bottomShadow = {1, h - 2, w - 2 - cw, h - 2};
+                int[] right = {w - 1 - cw, h - 2, w - 2, h - cw - 1};
+                horizontalPaintThumb(g, rect, polygon, top, topSlant, bottomSlant, bottom, bottomShadow, right, left);
             } else {
-                g.fillRect(5, 1, w - 1 - cw, h - 3);
-                Polygon p = new Polygon();
-                p.addPoint(cw, 0);
-                p.addPoint(0, cw);
-                p.addPoint(cw, h - 2);
-                g.fillPolygon(p);
-                g.setColor(getHighlightColor());
-                g.drawLine(cw - 1, 0, w - 2, 0);             // top
-                g.drawLine(0, cw, cw, 0);                // top slant
-                g.setColor(Color.black);
-                g.drawLine(0, h - 1 - cw, cw, h - 1);         // bottom slant
-                g.drawLine(cw, h - 1, w - 1, h - 1);           // bottom
-                g.setColor(getShadowColor());
-                g.drawLine(cw, h - 2, w - 2, h - 2);         // bottom
-                g.drawLine(w - 1, 1, w - 1, h - 2);          // right
+                int[] rect = {5, 1, w - 1 - cw, h - 3};
+                int[][] polygon = {{cw, 0}, {0, cw}, {cw, h - 2}};
+                int[] top = {cw - 1, 0, w - 2, 0};
+                int[] topSlant = {0, cw, cw, 0};
+                int[] bottomSlant = {0, h - 1, cw, h - 1};
+                int[] bottom = {cw, h - 1, w - 1, h - 1};
+                int[] bottomShadow = {cw, h - 2, w - 2, h - 2};
+                int[] right = {w - 1, 1, w - 1, h - 2};
+                horizontalPaintThumb(g, rect, polygon, top, topSlant, bottomSlant, bottom, bottomShadow, right, null);
             }
         }
         g.translate(-knobBounds.x, -knobBounds.y);
+    }
+
+    private void horizontalPaintThumb(Graphics2D g, int[] border, int[][] polygon, int[] top, int[] topSlant, int[] bottomSlant, int[] bottom, int[] bottomShadow, int[] right, int[] left) {
+        g.fillRect(border[0], border[1], border[2], border[3]);
+        Polygon p = new Polygon();
+        p.addPoint(polygon[0][0], polygon[0][1]);
+        p.addPoint(polygon[1][0],polygon[1][1]);
+        p.addPoint(polygon[2][0], polygon[2][1]);
+        g.fillPolygon(p);
+        g.setColor(getHighlightColor());
+        if (left != null) {
+            g.drawLine(left[0], left[1], left[2], left[3]);
+        }
+        g.drawLine(top[0], top[1], top[2], top[3]);
+        g.drawLine(topSlant[0], topSlant[1], topSlant[2], topSlant[3]);
+        g.setColor(Color.black);
+        g.drawLine(bottomSlant[0], bottomSlant[1], bottomSlant[2], bottomSlant[3]);
+        g.drawLine(bottom[0], bottom[1], bottom[2], bottom[3]);
+        g.setColor(getShadowColor());
+        g.drawLine(bottomShadow[0], bottomShadow[1], bottomShadow[2], bottomShadow[3]);
+        g.drawLine(right[0], right[1], right[2], right[3]);
+    }
+
+    private static void plainPaintThumb(Graphics2D g, int w, int h, float[] stops, Color[] stopColors) {
+        LinearGradientPaint lgp = new LinearGradientPaint(
+                new Point2D.Float(2, 2), new Point2D.Float(2, 2 + h - 4),
+                stops, stopColors,
+                MultipleGradientPaint.CycleMethod.REPEAT);
+        g.setPaint(lgp);
+        g.fillOval(2, 2, w - 4, h - 4);
+        g.setColor(new Color(0x444444));
+        g.drawOval(1, 1, w - 3, h - 3);
     }
 
     @Override
