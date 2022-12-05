@@ -21,8 +21,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B clean install -f pom.xml -DskipTests
       env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN  }}
     - name: Run tests with Maven
       run: mvn -B test -f pom.xml
       env:
-        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN  }}
