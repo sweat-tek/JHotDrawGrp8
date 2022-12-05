@@ -5,20 +5,24 @@ on:
     branches: [ "develop" ]
   pull_request:
     branches: [ "develop" ]
-
+env:
+  GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
 jobs:
-  buildAndTest:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'adopt'
-          cache: maven
-      - name: Build and test with Maven
-        run: mvn -s settings.xml --batch-mode --update-snapshots verify
-        env:
-          SECRET_USER_NAME: ${{ secrets.SECRET_USER_NAME }}
-          SECRET_USER_TOKEN: ${{ secrets.SECRET_USER_TOKEN }}
+    - uses: actions/checkout@v3
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B clean install -f pom.xml -DskipTests
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
+    - name: Run tests with Maven
+      run: mvn -B test -f pom.xml
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN  }}
