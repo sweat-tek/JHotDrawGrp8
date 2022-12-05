@@ -164,7 +164,7 @@ public class PaletteSliderUI extends BasicSliderUI {
             int cw = h / 2;
             if (slider.getComponentOrientation().isLeftToRight()) {
                 int[] rect = {1, 1, w - 1 - cw, h - 3};
-                int[][] polygon = {{w - cw - 1, 0}, {w - 1, cw}, {(w - 1 - cw, h - 2}};
+                int[][] polygon = {{w - cw - 1, 0}, {w - 1, cw}, {w - 1 - cw, h - 2}};
                 int[] left = {0, 0, 0, h - 2};
                 int[] top = {1, 0, w - 1 - cw, 0};
                 int[] topSlant = {w - cw - 1, 0, w - 1, cw};
