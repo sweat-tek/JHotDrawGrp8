@@ -27,7 +27,7 @@
     <servers>
         <server>
             <id>github</id>
-            <username>${SECRET_USER_NAME}</username>
+            <username>${USER_NAME}</username>
             <password>${SECRET_USER_TOKEN}</password>
         </server>
     </servers>

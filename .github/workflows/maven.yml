@@ -15,10 +15,10 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: maven
       - name: Build and test with Maven
         run: mvn -s mvn-settings.xml --batch-mode --update-snapshots verify
         env:
-          SECRET_USER_NAME: ${{ secrets.SECRET_USER_NAME }}
+          SECRET_USER_NAME: ${{ secrets.USER_NAME }}
           SECRET_USER_TOKEN: ${{ secrets.SECRET_USER_TOKEN }}
