@@ -192,7 +192,7 @@ public class PaletteSliderUI extends BasicSliderUI {
         g.fillRect(border[0], border[1], border[2], border[3]);
         Polygon p = new Polygon();
         p.addPoint(polygon[0][0], polygon[0][1]);
-        p.addPoint(polygon[1][0],polygon[1][1]);
+        p.addPoint(polygon[1][0], polygon[1][1]);
         p.addPoint(polygon[2][0], polygon[2][1]);
         g.fillPolygon(p);
         g.setColor(getHighlightColor());

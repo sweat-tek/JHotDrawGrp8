@@ -14,12 +14,9 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.util.prefs.Preferences;
-import java.util.regex.Pattern;
 import javax.swing.JFormattedTextField.AbstractFormatterFactory;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.text.DefaultFormatterFactory;
-import org.jhotdraw.color.ColorUtil;
-import org.jhotdraw.color.HSBColorSpace;
 import org.jhotdraw.util.prefs.PreferencesUtil;
 
 /**

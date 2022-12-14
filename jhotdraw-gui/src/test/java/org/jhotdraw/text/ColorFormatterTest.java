@@ -67,7 +67,7 @@ public class ColorFormatterTest {
     @org.junit.Test
     public void valueToString() throws ParseException {
         str = "";
-        Color color = new Color(128,128,128);
+        Color color = new Color(128, 128, 128);
 
         //Test allow null value returns null
         str = colorFormatter.valueToString(color);
