@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.geom.*;
 import org.jhotdraw.draw.AttributeKeys;
 import org.jhotdraw.geom.Geom;
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 
 /**
  * A {@link Figure} with a rectangular shape.
@@ -110,6 +111,7 @@ public class RectangleFigure extends AbstractAttributedFigure {
         return rectangle.clone();
     }
 
+    @FeatureEntryPoint(value = "RectangleFigure")
     @Override
     public RectangleFigure clone() {
         RectangleFigure that = (RectangleFigure) super.clone();

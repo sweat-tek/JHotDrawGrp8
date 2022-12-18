@@ -38,7 +38,7 @@ public abstract class SVGAttributedFigure extends AbstractAttributedFigure {
     public SVGAttributedFigure() {
     }
 
-    @FeatureEntryPoint("drawRectangle")
+    @FeatureEntryPoint("SVGAttributedFigure")
     @Override
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
