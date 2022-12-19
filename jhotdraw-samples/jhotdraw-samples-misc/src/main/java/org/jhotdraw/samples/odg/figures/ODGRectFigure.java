@@ -26,8 +26,6 @@ import org.jhotdraw.geom.GrowStroke;
 import org.jhotdraw.samples.odg.Gradient;
 import org.jhotdraw.samples.odg.ODGAttributeKeys;
 import static org.jhotdraw.samples.odg.ODGAttributeKeys.*;
-import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
-
 
 /**
  * ODGRect.
@@ -286,7 +284,6 @@ public class ODGRectFigure extends ODGAttributedFigure implements ODGFigure {
 
     // COMPOSITE FIGURES
     // CLONING
-    @FeatureEntryPoint(value = "ODGRectFigure")
     @Override
     public ODGRectFigure clone() {
         ODGRectFigure that = (ODGRectFigure) super.clone();
