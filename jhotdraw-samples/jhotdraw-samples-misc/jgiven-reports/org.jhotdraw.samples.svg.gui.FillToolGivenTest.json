@@ -1,0 +1,76 @@
+{
+  "className": "org.jhotdraw.samples.svg.gui.FillToolGivenTest",
+  "name": "Fill Tool Given",
+  "scenarios": [
+    {
+      "className": "org.jhotdraw.samples.svg.gui.FillToolGivenTest",
+      "testMethodName": "fill_figure",
+      "description": "fill figure",
+      "tagIds": [],
+      "explicitParameters": [],
+      "derivedParameters": [],
+      "scenarioCases": [
+        {
+          "caseNr": 1,
+          "steps": [
+            {
+              "name": "user select a figure",
+              "words": [
+                {
+                  "value": "Given",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "user select a figure"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 8944300,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "user selects a color",
+              "words": [
+                {
+                  "value": "When",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "user selects a color"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 418600,
+              "depth": 0,
+              "parentFailed": false
+            },
+            {
+              "name": "the figure should be that color",
+              "words": [
+                {
+                  "value": "Then",
+                  "isIntroWord": true
+                },
+                {
+                  "value": "the figure should be that color"
+                }
+              ],
+              "status": "PASSED",
+              "durationInNanos": 444600,
+              "depth": 0,
+              "parentFailed": false
+            }
+          ],
+          "explicitArguments": [],
+          "derivedArguments": [],
+          "status": "SUCCESS",
+          "durationInNanos": 194272100
+        }
+      ],
+      "casesAsTable": false,
+      "durationInNanos": 194272100
+    }
+  ],
+  "tagMap": {}
+}
