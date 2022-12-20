@@ -91,12 +91,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
                     gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
                     gr.setRenderingHints(g.getRenderingHints());
                     super.draw(gr);
-                    gr.dispose();
-                    Composite savedComposite = g.getComposite();
-                    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity));
-                    g.drawImage(buf, (int) drawingArea.x, (int) drawingArea.y,
-                            2 + (int) drawingArea.width, 2 + (int) drawingArea.height, null);
-                    g.setComposite(savedComposite);
+                    SVGUtil.handleDispose(g, (float) opacity, drawingArea, buf, gr);
                 }
             } else {
                 super.draw(g);

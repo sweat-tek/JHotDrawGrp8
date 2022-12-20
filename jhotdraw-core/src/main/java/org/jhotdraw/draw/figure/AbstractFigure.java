@@ -335,13 +335,10 @@ public abstract class AbstractFigure
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<>();
-        switch (detailLevel) {
-            case -1:
-                handles.add(new BoundsOutlineHandle(this, false, true));
-                break;
-            case 0:
-                ResizeHandleKit.addResizeHandles(this, handles);
-                break;
+        if(detailLevel == 0){
+            ResizeHandleKit.addResizeHandles(this, handles);
+        } else {
+            handles.add(new BoundsOutlineHandle(this, false, true));
         }
         return handles;
     }
