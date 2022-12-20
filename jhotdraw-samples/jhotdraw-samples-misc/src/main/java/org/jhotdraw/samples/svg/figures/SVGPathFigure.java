@@ -34,6 +34,8 @@ import org.jhotdraw.geom.Shapes;
 import org.jhotdraw.samples.svg.Gradient;
 import org.jhotdraw.samples.svg.SVGAttributeKeys;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+
+import org.jhotdraw.samples.svg.action.FigureUndoAction;
 import org.jhotdraw.util.*;
 
 /**
@@ -365,17 +367,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
-            actions.add(new AbstractAction(labels.getString("edit.removeTransform.text")) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    willChange();
-                    fireUndoableEditHappened(
-                            TRANSFORM.setUndoable(SVGPathFigure.this, null));
-                    changed();
-                }
-            });
+            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"),this));
             actions.add(new AbstractAction(labels.getString("edit.flattenTransform.text")) {
                 private static final long serialVersionUID = 1L;
 
