@@ -214,10 +214,6 @@ public abstract class AbstractFigure
         }
     }
 
-    public void fireFigureChanged() {
-        fireFigureChanged(getDrawingArea());
-    }
-
     /**
      * Notify all listenerList that have registered interest for notification on this event type.
      */
@@ -510,11 +506,6 @@ public abstract class AbstractFigure
         return isSelectable;
     }
 
-    public void setSelectable(boolean newValue) {
-        boolean oldValue = isSelectable;
-        isSelectable = newValue;
-        firePropertyChange(SELECTABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is removable. By default {@code AbstractFigure} can be removed.
@@ -524,11 +515,6 @@ public abstract class AbstractFigure
         return isRemovable;
     }
 
-    public void setRemovable(boolean newValue) {
-        boolean oldValue = isRemovable;
-        isRemovable = newValue;
-        firePropertyChange(REMOVABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is transformable. By default {@code AbstractFigure} can be
@@ -539,11 +525,6 @@ public abstract class AbstractFigure
         return isTransformable;
     }
 
-    public void setTransformable(boolean newValue) {
-        boolean oldValue = isTransformable;
-        isTransformable = newValue;
-        firePropertyChange(TRANSFORMABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is visible. By default {@code AbstractFigure} is visible.
