@@ -58,7 +58,7 @@ public abstract class AbstractFigure
     /**
      * Creates a new instance.
      */
-    public AbstractFigure() {
+    protected AbstractFigure() {
     }
 
     // DRAWING
@@ -315,11 +315,6 @@ public abstract class AbstractFigure
         }
     }
 
-    /*
-     public Set createHandles() {
-     return new HashSet();
-     }
-     */
     @Override
     public AbstractFigure clone() {
         AbstractFigure that = (AbstractFigure) super.clone();
@@ -486,11 +481,6 @@ public abstract class AbstractFigure
         return new Point2D.Double(r.x, r.y);
     }
 
-    /*
-     public Rectangle2D.Double getHitBounds() {
-     return getBounds();
-     }
-     */
     @Override
     public Dimension2DDouble getPreferredSize() {
         Rectangle2D.Double r = getBounds();
@@ -579,11 +569,7 @@ public abstract class AbstractFigure
     }
 
     protected FontRenderContext getFontRenderContext() {
-        FontRenderContext frc = null;
-        if (frc == null) {
-            frc = new FontRenderContext(new AffineTransform(), true, true);
-        }
-        return frc;
+        return new FontRenderContext(new AffineTransform(), true, true);
     }
 
     @Override
