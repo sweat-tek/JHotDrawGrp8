@@ -150,22 +150,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         return AttributeKeys.getStroke(this, 1.0);
     }
 
-    public double getStrokeMiterLimitFactor() {
-        Number value = get(AttributeKeys.STROKE_MITER_LIMIT);
-        return (value != null) ? value.doubleValue() : 10f;
-    }
-
-    public Rectangle2D.Double getFigureDrawBounds() {
-        double width = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
-        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-            width *= get(STROKE_MITER_LIMIT);
-        }
-        width++;
-        Rectangle2D.Double r = getBounds();
-        Geom.grow(r, width, width);
-        return r;
-    }
-
     /**
      * This method is called by method draw() to draw the fill
      * area of the figure. AttributedFigure configures the Graphics2D
@@ -263,7 +247,4 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         readAttributes(in);
     }
 
-    public <T> boolean hasAttribute(AttributeKey<T> key) {
-        return attributes.containsKey(key);
-    }
 }
