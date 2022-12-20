@@ -58,7 +58,7 @@ public abstract class AbstractFigure
     /**
      * Creates a new instance.
      */
-    public AbstractFigure() {
+    protected AbstractFigure() {
     }
 
     // DRAWING
@@ -214,10 +214,6 @@ public abstract class AbstractFigure
         }
     }
 
-    public void fireFigureChanged() {
-        fireFigureChanged(getDrawingArea());
-    }
-
     /**
      * Notify all listenerList that have registered interest for notification on this event type.
      */
@@ -315,11 +311,6 @@ public abstract class AbstractFigure
         }
     }
 
-    /*
-     public Set createHandles() {
-     return new HashSet();
-     }
-     */
     @Override
     public AbstractFigure clone() {
         AbstractFigure that = (AbstractFigure) super.clone();
@@ -335,13 +326,10 @@ public abstract class AbstractFigure
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<>();
-        switch (detailLevel) {
-            case -1:
-                handles.add(new BoundsOutlineHandle(this, false, true));
-                break;
-            case 0:
-                ResizeHandleKit.addResizeHandles(this, handles);
-                break;
+        if(detailLevel == 0){
+            ResizeHandleKit.addResizeHandles(this, handles);
+        } else {
+            handles.add(new BoundsOutlineHandle(this, false, true));
         }
         return handles;
     }
@@ -489,11 +477,6 @@ public abstract class AbstractFigure
         return new Point2D.Double(r.x, r.y);
     }
 
-    /*
-     public Rectangle2D.Double getHitBounds() {
-     return getBounds();
-     }
-     */
     @Override
     public Dimension2DDouble getPreferredSize() {
         Rectangle2D.Double r = getBounds();
@@ -523,11 +506,6 @@ public abstract class AbstractFigure
         return isSelectable;
     }
 
-    public void setSelectable(boolean newValue) {
-        boolean oldValue = isSelectable;
-        isSelectable = newValue;
-        firePropertyChange(SELECTABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is removable. By default {@code AbstractFigure} can be removed.
@@ -537,11 +515,6 @@ public abstract class AbstractFigure
         return isRemovable;
     }
 
-    public void setRemovable(boolean newValue) {
-        boolean oldValue = isRemovable;
-        isRemovable = newValue;
-        firePropertyChange(REMOVABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is transformable. By default {@code AbstractFigure} can be
@@ -552,11 +525,6 @@ public abstract class AbstractFigure
         return isTransformable;
     }
 
-    public void setTransformable(boolean newValue) {
-        boolean oldValue = isTransformable;
-        isTransformable = newValue;
-        firePropertyChange(TRANSFORMABLE_PROPERTY, oldValue, newValue);
-    }
 
     /**
      * Checks whether this figure is visible. By default {@code AbstractFigure} is visible.
@@ -582,11 +550,7 @@ public abstract class AbstractFigure
     }
 
     protected FontRenderContext getFontRenderContext() {
-        FontRenderContext frc = null;
-        if (frc == null) {
-            frc = new FontRenderContext(new AffineTransform(), true, true);
-        }
-        return frc;
+        return new FontRenderContext(new AffineTransform(), true, true);
     }
 
     @Override

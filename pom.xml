@@ -10,9 +10,9 @@
 	</organization>
 	<repositories>
 		<repository>
-			<id>git-corfixen</id>
-			<name>corfixen's Git based repo</name>
-			<url>https://maven.pkg.github.com/sweat-tek/MavenRepository/</url>
+			<id>github</id>
+			<name>GitHub external Packages</name>
+			<url>https://maven.pkg.github.com/sweat-tek/MavenRepository</url>
 		</repository>
 	</repositories>
 	<licenses>
@@ -145,5 +145,8 @@
 	 <module>jhotdraw-datatransfer</module>
 	 <module>jhotdraw-actions</module>
 	</modules>
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 </project>

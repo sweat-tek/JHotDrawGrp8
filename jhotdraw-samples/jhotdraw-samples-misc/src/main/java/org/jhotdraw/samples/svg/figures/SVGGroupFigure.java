@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.samples.svg.figures;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.GroupFigure;
 import org.jhotdraw.draw.figure.Figure;
 import java.awt.*;
@@ -34,6 +35,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
     /**
      * Creates a new instance.
      */
+    @FeatureEntryPoint(value = "Grouping")
     public SVGGroupFigure() {
         SVGAttributeKeys.setDefaults(this);
     }
@@ -68,6 +70,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
     }
 
     @Override
+    @FeatureEntryPoint(value = "Grouping")
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
         opacity = Math.min(Math.max(0d, opacity), 1d);
@@ -88,12 +91,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
                     gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
                     gr.setRenderingHints(g.getRenderingHints());
                     super.draw(gr);
-                    gr.dispose();
-                    Composite savedComposite = g.getComposite();
-                    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity));
-                    g.drawImage(buf, (int) drawingArea.x, (int) drawingArea.y,
-                            2 + (int) drawingArea.width, 2 + (int) drawingArea.height, null);
-                    g.setComposite(savedComposite);
+                    SVGUtil.handleDispose(g, (float) opacity, drawingArea, buf, gr);
                 }
             } else {
                 super.draw(g);

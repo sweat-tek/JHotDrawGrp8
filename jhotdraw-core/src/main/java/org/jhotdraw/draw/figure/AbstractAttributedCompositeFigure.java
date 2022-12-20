@@ -39,7 +39,7 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
     /**
      * Creates a new instance.
      */
-    public AbstractAttributedCompositeFigure() {
+    protected AbstractAttributedCompositeFigure() {
     }
 
     public void setAttributeEnabled(AttributeKey<?> key, boolean b) {
@@ -53,10 +53,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         }
     }
 
-    public <T> boolean isAttributeEnabled(AttributeKey<?> key) {
-        return forbiddenAttributes == null || !forbiddenAttributes.contains(key);
-    }
-
     @SuppressWarnings("unchecked")
     public void setAttributes(Map<AttributeKey<?>, Object> map) {
         for (Map.Entry<AttributeKey<?>, Object> entry : map.entrySet()) {
@@ -66,7 +62,7 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
 
     @Override
     public Map<AttributeKey<?>, Object> getAttributes() {
-        return (Map<AttributeKey<?>, Object>) new HashMap<>(attributes);
+        return new HashMap<>(attributes);
     }
 
     /**
@@ -154,22 +150,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         return AttributeKeys.getStroke(this, 1.0);
     }
 
-    public double getStrokeMiterLimitFactor() {
-        Number value = (Number) get(AttributeKeys.STROKE_MITER_LIMIT);
-        return (value != null) ? value.doubleValue() : 10f;
-    }
-
-    public Rectangle2D.Double getFigureDrawBounds() {
-        double width = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
-        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-            width *= get(STROKE_MITER_LIMIT);
-        }
-        width++;
-        Rectangle2D.Double r = getBounds();
-        Geom.grow(r, width, width);
-        return r;
-    }
-
     /**
      * This method is called by method draw() to draw the fill
      * area of the figure. AttributedFigure configures the Graphics2D
@@ -215,9 +195,7 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
                 Object prototypeValue = prototype.get(key);
                 @SuppressWarnings("unchecked")
                 Object attributeValue = get(key);
-                if (prototypeValue != attributeValue
-                        || (prototypeValue != null && attributeValue != null
-                        && !prototypeValue.equals(attributeValue))) {
+                if (prototypeValue != attributeValue) {
                     if (!isElementOpen) {
                         out.openElement("a");
                         isElementOpen = true;
@@ -257,16 +235,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         return AttributeKeys.SUPPORTED_ATTRIBUTES_MAP.get(name);
     }
 
-    /**
-     * Applies all attributes of this figure to that figure.
-     */
-    @SuppressWarnings("unchecked")
-    protected void applyAttributesTo(Figure that) {
-        for (Map.Entry<AttributeKey<?>, Object> entry : attributes.entrySet()) {
-            that.set((AttributeKey<Object>) entry.getKey(), entry.getValue());
-        }
-    }
-
     @Override
     public void write(DOMOutput out) throws IOException {
         super.write(out);
@@ -279,15 +247,4 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         readAttributes(in);
     }
 
-    public <T> void removeAttribute(AttributeKey<T> key) {
-        if (hasAttribute(key)) {
-            T oldValue = get(key);
-            attributes.remove(key);
-            fireAttributeChanged(key, oldValue, key.getDefaultValue());
-        }
-    }
-
-    public <T> boolean hasAttribute(AttributeKey<T> key) {
-        return attributes.containsKey(key);
-    }
 }
