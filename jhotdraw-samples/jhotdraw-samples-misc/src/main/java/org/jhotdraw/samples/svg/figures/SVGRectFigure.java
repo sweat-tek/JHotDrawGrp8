@@ -45,20 +45,7 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
      * Identifies the {@code arcHeight} JavaBeans property.
      */
     public static final String ARC_HEIGHT_PROPERTY = "arcHeight";
-    /**
-     * The variable acv is used for generating the locations of the control
-     * points for the rounded rectangle using path.curveTo.
-     */
-    private static final double ACV;
 
-    static {
-        double angle = Math.PI / 4.0;
-        double a = 1.0 - Math.cos(angle);
-        double b = Math.tan(angle);
-        double c = Math.sqrt(1.0 + b * b) - 1 + a;
-        double cv = 4.0 / 3.0 * a * b / c;
-        ACV = (1.0 - cv);
-    }
     /**
      */
     private RoundRectangle2D.Double roundrect;
@@ -104,34 +91,10 @@ public class SVGRectFigure extends SVGAttributedFigure implements SVGFigure {
     protected void drawStroke(Graphics2D g) {
         if (roundrect.archeight == 0 && roundrect.arcwidth == 0) {
             g.draw(roundrect.getBounds2D());
-        } else {
-            // We have to generate the path for the round rectangle manually,
-            // because the path of a Java RoundRectangle is drawn counter clockwise
-            // whereas an SVG rect needs to be drawn clockwise.
-            Path2D.Double p = new Path2D.Double();
-            double aw = roundrect.arcwidth / 2d;
-            double ah = roundrect.archeight / 2d;
-            p.moveTo((roundrect.x + aw), (float) roundrect.y);
-            p.lineTo((roundrect.x + roundrect.width - aw), (float) roundrect.y);
-            p.curveTo((roundrect.x + roundrect.width - aw * ACV), (float) roundrect.y,
-                    (roundrect.x + roundrect.width), (float) (roundrect.y + ah * ACV),
-                    (roundrect.x + roundrect.width), (roundrect.y + ah));
-            p.lineTo((roundrect.x + roundrect.width), (roundrect.y + roundrect.height - ah));
-            p.curveTo(
-                    (roundrect.x + roundrect.width), (roundrect.y + roundrect.height - ah * ACV),
-                    (roundrect.x + roundrect.width - aw * ACV), (roundrect.y + roundrect.height),
-                    (roundrect.x + roundrect.width - aw), (roundrect.y + roundrect.height));
-            p.lineTo((roundrect.x + aw), (roundrect.y + roundrect.height));
-            p.curveTo((roundrect.x + aw * ACV), (roundrect.y + roundrect.height),
-                    (roundrect.x), (roundrect.y + roundrect.height - ah * ACV),
-                    (float) roundrect.x, (roundrect.y + roundrect.height - ah));
-            p.lineTo((float) roundrect.x, (roundrect.y + ah));
-            p.curveTo((roundrect.x), (roundrect.y + ah * ACV),
-                    (roundrect.x + aw * ACV), (float) (roundrect.y),
-                    (float) (roundrect.x + aw), (float) (roundrect.y));
-            p.closePath();
-            g.draw(p);
+            return;
         }
+        Path2D.Double p = SVGRectFigurePathUtil.calculateRoundedRectPath(this);
+        g.draw(p);
     }
 
     // SHAPE AND BOUNDS
