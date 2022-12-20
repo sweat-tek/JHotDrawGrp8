@@ -13,7 +13,6 @@ import org.jhotdraw.draw.figure.AbstractAttributedCompositeFigure;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.undo.*;
@@ -54,7 +53,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * This is used to perform faster hit testing.
      */
     private transient Shape cachedHitShape;
-    private static final boolean DEBUG = false;
 
     /**
      * Creates a new instance.
@@ -188,16 +186,12 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         if (isClosed && get(FILL_COLOR) == null && get(FILL_GRADIENT) == null) {
             return getHitShape().contains(p);
         }
-
         double tolerance = Math.max(2f, AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d);
         if (isClosed || get(FILL_COLOR) != null || get(FILL_GRADIENT) != null) {
             if (getPath().contains(p)) {
                 return true;
             }
-            double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) /**
-                     * 2d
-                     */
-                    ;
+            double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0);
             GrowStroke gs = new GrowStroke(grow,
                     (AttributeKeys.getStrokeTotalWidth(this, 1.0)
                     * get(STROKE_MITER_LIMIT)));
@@ -322,7 +316,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     @Override
     public Collection<Action> getActions(Point2D.Double p) {
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-        LinkedList<Action> actions = new LinkedList<Action>();
+        LinkedList<Action> actions = new LinkedList<>();
         if (get(TRANSFORM) != null) {
             actions.add(new AbstractAction(labels.getString("edit.removeTransform.text")) {
                 private static final long serialVersionUID = 1L;
@@ -457,19 +451,13 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
 
     @Override
-    public void add(final int index, final Figure figure) {
-        super.add(index, (SVGBezierFigure) figure);
-    }
-
-    @Override
     public SVGBezierFigure getChild(int index) {
         return (SVGBezierFigure) super.getChild(index);
     }
 
     @Override
     public SVGPathFigure clone() {
-        SVGPathFigure that = (SVGPathFigure) super.clone();
-        return that;
+        return (SVGPathFigure) super.clone();
     }
 
     public void flattenTransform() {
