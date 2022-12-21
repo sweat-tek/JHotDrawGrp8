@@ -97,18 +97,15 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D rx = getTransformedShape().getBounds2D();
-        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
-        if (get(TRANSFORM) == null) {
-            double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1;
-            Geom.grow(r, g, g);
-        } else {
-            double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double width = strokeTotalWidth / 2d;
-            width *= Math.max(get(TRANSFORM).getScaleX(), get(TRANSFORM).getScaleY()) + 1;
-            Geom.grow(r, width, width);
+        Rectangle2D.Double boundingBox = (Rectangle2D.Double) getTransformedShape().getBounds2D();
+        double size = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1;
+        AffineTransform transform = get(TRANSFORM);
+        if (transform != null) {
+            double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
+            size = strokeTotalWidth * Math.max(transform.getScaleX(), transform.getScaleY()) + 1;
         }
-        return r;
+        Geom.grow(boundingBox, size, size);
+        return boundingBox;
     }
 
     /**
