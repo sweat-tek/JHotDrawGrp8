@@ -15,6 +15,7 @@ import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.*;
 import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
+
 import org.jhotdraw.draw.handle.BoundsOutlineHandle;
 import org.jhotdraw.draw.handle.Handle;
 import org.jhotdraw.draw.handle.ResizeHandleKit;
@@ -215,21 +216,17 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     // EDITING
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
-        LinkedList<Handle> handles = new LinkedList<Handle>();
-        switch (detailLevel % 2) {
-            case -1: // Mouse hover handles
-                handles.add(new BoundsOutlineHandle(this, false, true));
-                break;
-            case 0:
-                ResizeHandleKit.addResizeHandles(this, handles);
-                handles.add(new LinkHandle(this));
-                break;
-            case 1:
-                TransformHandleKit.addTransformHandles(this, handles);
-                break;
-            default:
-                break;
+        int handlesDetailLevel = detailLevel % 2;
+        LinkedList<Handle> handles = (LinkedList<Handle>) super.createHandles(handlesDetailLevel);
+
+        if (handlesDetailLevel == 0) {
+            handles.add(new LinkHandle(this));
         }
+
+        if (handlesDetailLevel == 1) {
+            TransformHandleKit.addTransformHandles(this, handles);
+        }
+
         return handles;
     }
 
