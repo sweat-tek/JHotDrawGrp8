@@ -157,25 +157,31 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     public void transform(AffineTransform tx) {
         AffineTransform tForm = get(TRANSFORM);
         int txType = tx.getType();
-        if (tForm != null || (txType & (AffineTransform.TYPE_TRANSLATION)) != txType) {
+        if ((txType & (AffineTransform.TYPE_TRANSLATION)) != txType) {
             if (tForm == null) {
                 TRANSFORM.setClone(this, tx);
-            } else {
-                AffineTransform transform = TRANSFORM.getClone(this);
-                transform.preConcatenate(tx);
-                set(TRANSFORM, transform);
+                invalidate();
+                return;
             }
-        } else {
-            Point2D.Double anchor = getStartPoint();
-            Point2D.Double lead = getEndPoint();
-            Point2D.Double transformedAnchor = (Point2D.Double) tx.transform(anchor, anchor);
-            Point2D.Double transformedLead = (Point2D.Double) tx.transform(lead, lead);
-            setBounds(transformedAnchor, transformedLead);
-            transformGradients(tx);
         }
+        if (tForm != null) {
+            AffineTransform transform = TRANSFORM.getClone(this);
+            transform.preConcatenate(tx);
+            set(TRANSFORM, transform);
+            invalidate();
+            return;
+        }
+        transformBounds(tx);
+        transformGradients(tx);
         invalidate();
     }
-
+    private void transformBounds(AffineTransform tx) {
+        Point2D.Double anchor = getStartPoint();
+        Point2D.Double lead = getEndPoint();
+        Point2D.Double transformedAnchor = (Point2D.Double) tx.transform(anchor, anchor);
+        Point2D.Double transformedLead = (Point2D.Double) tx.transform(lead, lead);
+        setBounds(transformedAnchor, transformedLead);
+    }
     private void transformGradients(AffineTransform tx) {
         AttributeKey<Gradient> gradientTransformType = null;
         if (get(FILL_GRADIENT) != null && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
