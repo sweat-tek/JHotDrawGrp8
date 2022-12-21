@@ -185,8 +185,10 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
         if (get(STROKE_GRADIENT) != null && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
             gradientTransformType = STROKE_GRADIENT;
         }
-        assert gradientTransformType != null;
-        transformSpecificGradient(gradientTransformType, tx);
+
+        if (gradientTransformType != null) {
+            transformSpecificGradient(gradientTransformType, tx);
+        }
     }
     private void transformSpecificGradient(AttributeKey<Gradient> type, AffineTransform tx) {
         Gradient g = type.getClone(this);
