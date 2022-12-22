@@ -1,9 +1,9 @@
-package org.jhotdraw.samples.svg.gui;
+package org.jhotdraw.samples.svg.figures;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
-import org.jhotdraw.samples.svg.gui.JGiven.GivenEllipseTool;
-import org.jhotdraw.samples.svg.gui.JGiven.ThenEllipseShouldBeCreated;
-import org.jhotdraw.samples.svg.gui.JGiven.WhenUserCreatesEllipse;
+import org.jhotdraw.samples.svg.figures.JGivenEllipse.GivenEllipseTool;
+import org.jhotdraw.samples.svg.figures.JGivenEllipse.ThenEllipseShouldBeCreated;
+import org.jhotdraw.samples.svg.figures.JGivenEllipse.WhenUserCreatesEllipse;
 import org.junit.Test;
 
 public class EllipseToolGivenTest extends ScenarioTest<GivenEllipseTool, WhenUserCreatesEllipse, ThenEllipseShouldBeCreated> {

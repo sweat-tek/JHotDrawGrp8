@@ -1,4 +1,4 @@
-package org.jhotdraw.samples.svg.gui.JGiven;
+package org.jhotdraw.samples.svg.figures.JGivenEllipse;
 
 import com.tngtech.jgiven.Stage;
 import com.tngtech.jgiven.annotation.BeforeStage;

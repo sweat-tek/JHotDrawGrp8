@@ -1,8 +1,6 @@
-package org.jhotdraw.samples.svg.figure;
+package org.jhotdraw.samples.svg.figures;
 
 import org.jhotdraw.draw.handle.Handle;
-import org.jhotdraw.samples.svg.figures.LinkHandle;
-import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
