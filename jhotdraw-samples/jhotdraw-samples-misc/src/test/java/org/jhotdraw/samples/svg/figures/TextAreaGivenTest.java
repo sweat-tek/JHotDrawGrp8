@@ -12,7 +12,7 @@ public class TextAreaGivenTest extends ScenarioTest<GivenUserSelectTextArea, Whe
     @Test
     public void text_area() {
         given().the_user_select_text_area();
-        when().userWritesAFewLinesOfText();
-        then().theTextShouldBeAdded();
+        when().user_writes_a_few_lines_of_text();
+        then().the_text_should_be_added();
     }
 }
