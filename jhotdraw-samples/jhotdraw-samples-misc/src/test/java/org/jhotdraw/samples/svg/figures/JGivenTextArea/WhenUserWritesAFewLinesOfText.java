@@ -15,7 +15,7 @@ public class WhenUserWritesAFewLinesOfText extends Stage<WhenUserWritesAFewLines
     private DefaultDrawingView view;
 
     @Test
-    public WhenUserWritesAFewLinesOfText userWritesAFewLinesOfText() {
+    public WhenUserWritesAFewLinesOfText user_writes_a_few_lines_of_text() {
         Figure textAreaFigure = view.getSelectedFigures().iterator().next();
         assertNotNull(textAreaFigure);
         TextHolderFigure textArea = (TextHolderFigure) textAreaFigure;
