@@ -7,8 +7,8 @@ import org.jhotdraw.draw.DefaultDrawing;
 import org.jhotdraw.draw.DefaultDrawingEditor;
 import org.jhotdraw.draw.DefaultDrawingView;
 import org.jhotdraw.draw.DrawingEditor;
-import org.jhotdraw.draw.figure.TextAreaFigure;
 import org.jhotdraw.draw.figure.TextHolderFigure;
+import org.jhotdraw.samples.svg.figures.SVGTextAreaFigure;
 import org.junit.Test;
 
 public class GivenUserSelectTextArea extends Stage<GivenUserSelectTextArea> {
@@ -29,7 +29,7 @@ public class GivenUserSelectTextArea extends Stage<GivenUserSelectTextArea> {
 
     @Test
     public GivenUserSelectTextArea the_user_select_text_area() {
-        TextHolderFigure textAreaFigure = new TextAreaFigure();
+        TextHolderFigure textAreaFigure = new SVGTextAreaFigure();
 
         view.getDrawing().add(textAreaFigure);
         view.addToSelection(textAreaFigure);
