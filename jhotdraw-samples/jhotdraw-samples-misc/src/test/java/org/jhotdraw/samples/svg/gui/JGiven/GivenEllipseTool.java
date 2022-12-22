@@ -6,7 +6,6 @@ import com.tngtech.jgiven.annotation.ProvidedScenarioState;
 import org.jhotdraw.draw.*;
 import org.jhotdraw.draw.tool.CreationTool;
 import org.jhotdraw.samples.svg.figures.SVGEllipseFigure;
-import org.jhotdraw.samples.svg.io.DefaultSVGFigureFactory;
 import org.junit.Test;
 
 import java.util.HashMap;
