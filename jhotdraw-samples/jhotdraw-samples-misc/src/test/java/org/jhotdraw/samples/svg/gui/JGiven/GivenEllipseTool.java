@@ -21,16 +21,12 @@ public class GivenEllipseTool extends Stage<GivenEllipseTool> {
     @ProvidedScenarioState
     private CreationTool tool;
 
-    @ProvidedScenarioState
-    private DefaultSVGFigureFactory factory;
-
     @BeforeStage
     void before() {
         editor = new DefaultDrawingEditor();
         view = new DefaultDrawingView();
         view.setDrawing(new DefaultDrawing());
         editor.setActiveView(view);
-        factory = new DefaultSVGFigureFactory();
     }
 
     @Test
