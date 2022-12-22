@@ -40,7 +40,10 @@ public class SVGTextAreaFigureTest {
         Point2D.Double anchor = new Point2D.Double(3.43, 4.43);
         Point2D.Double lead = new Point2D.Double(5.43, 6.43);
         textArea.setBounds(anchor, lead);
+        assertNotNull(textArea.getBounds());
         assertNotEquals(beforeNewBounds, textArea.getBounds());
+        assertEquals(anchor.x, textArea.getBounds().x, 0.1);
+        assertEquals(anchor.y, textArea.getBounds().y, 0.1);
     }
 
     @Test
