@@ -30,7 +30,6 @@ public class GivenUserSelectTextArea extends Stage<GivenUserSelectTextArea> {
     @Test
     public GivenUserSelectTextArea the_user_select_text_area() {
         TextHolderFigure textAreaFigure = new SVGTextAreaFigure();
-
         view.getDrawing().add(textAreaFigure);
         view.addToSelection(textAreaFigure);
         view.selectAll();

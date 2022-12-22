@@ -9,6 +9,7 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ThenTheTextShouldBeAdded extends Stage<ThenTheTextShouldBeAdded> {
 
@@ -18,6 +19,7 @@ public class ThenTheTextShouldBeAdded extends Stage<ThenTheTextShouldBeAdded> {
     @Test
     public ThenTheTextShouldBeAdded theTextShouldBeAdded() {
         Figure textAreaFigure = view.getSelectedFigures().iterator().next();
+        assertNotNull(textAreaFigure);
         TextHolderFigure textArea = (TextHolderFigure) textAreaFigure;
         assertEquals("This text is written by the user", textArea.getText());
         return self();
