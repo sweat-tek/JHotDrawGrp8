@@ -15,7 +15,7 @@ public class ThenTheTextShouldBeAdded extends Stage<ThenTheTextShouldBeAdded> {
     private DefaultDrawingView view;
 
     @Test
-    public ThenTheTextShouldBeAdded theTextShouldBeAdded() {
+    public ThenTheTextShouldBeAdded the_text_should_be_added() {
         Figure textAreaFigure = view.getSelectedFigures().iterator().next();
         assertNotNull(textAreaFigure);
         TextHolderFigure textArea = (TextHolderFigure) textAreaFigure;
