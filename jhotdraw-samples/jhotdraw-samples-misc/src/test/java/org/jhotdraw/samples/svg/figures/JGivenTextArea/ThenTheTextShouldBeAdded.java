@@ -7,9 +7,7 @@ import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import org.junit.Test;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class ThenTheTextShouldBeAdded extends Stage<ThenTheTextShouldBeAdded> {
 

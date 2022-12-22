@@ -7,7 +7,6 @@ import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.TextHolderFigure;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class WhenUserWritesAFewLinesOfText extends Stage<WhenUserWritesAFewLinesOfText> {
@@ -17,7 +16,6 @@ public class WhenUserWritesAFewLinesOfText extends Stage<WhenUserWritesAFewLines
 
     @Test
     public WhenUserWritesAFewLinesOfText userWritesAFewLinesOfText() {
-        assertEquals(1, view.getSelectedFigures().size());
         Figure textAreaFigure = view.getSelectedFigures().iterator().next();
         assertNotNull(textAreaFigure);
         TextHolderFigure textArea = (TextHolderFigure) textAreaFigure;
