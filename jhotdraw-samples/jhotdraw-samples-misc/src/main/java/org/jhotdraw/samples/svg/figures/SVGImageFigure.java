@@ -263,7 +263,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
-            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"),this));
+            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
         }
         if (bufferedImage != null) {
             if (rectangle.width != bufferedImage.getWidth()

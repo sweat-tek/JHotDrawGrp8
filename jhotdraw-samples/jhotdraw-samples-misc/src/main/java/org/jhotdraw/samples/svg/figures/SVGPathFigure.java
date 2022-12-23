@@ -367,7 +367,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
-            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"),this));
+            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
             actions.add(new AbstractAction(labels.getString("edit.flattenTransform.text")) {
                 private static final long serialVersionUID = 1L;
 
