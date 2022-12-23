@@ -26,12 +26,12 @@ public class GivenRectangleToolIsSelected extends Stage<GivenRectangleToolIsSele
         drawingEditor = new DefaultDrawingEditor();
         defaultDrawingView = new DefaultDrawingView();
         defaultDrawingView.setDrawing(new DefaultDrawing());
+        drawingEditor.add(defaultDrawingView);
         drawingEditor.setActiveView(defaultDrawingView);
     }
 
     @Test
     public GivenRectangleToolIsSelected rectangle_tool_is_selected() {
-        SVGRectFigure svgRectFigure = new SVGRectFigure(5d, 5d, 10d, 3d);
         creationTool = new CreationTool(new SVGRectFigure(), null);
         creationTool.activate(drawingEditor);
         return self();
