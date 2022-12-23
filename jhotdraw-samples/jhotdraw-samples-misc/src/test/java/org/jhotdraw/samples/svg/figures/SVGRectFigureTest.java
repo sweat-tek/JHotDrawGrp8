@@ -2,25 +2,17 @@ package org.jhotdraw.samples.svg.figures;
 
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.samples.svg.action.FigureUndoAction;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.LinkedList;
-
-import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class SVGRectFigureTest {
@@ -56,7 +48,7 @@ public class SVGRectFigureTest {
 
     @Test
     public void drawStroke() {
-        svgRectFigure.setArc(2d,2d);
+        svgRectFigure.setArc(2d, 2d);
         svgRectFigure.drawStroke(graphics2D);
         ArgumentCaptor<Path2D> captor = ArgumentCaptor.forClass(Path2D.class);
         verify(graphics2D).draw(captor.capture());

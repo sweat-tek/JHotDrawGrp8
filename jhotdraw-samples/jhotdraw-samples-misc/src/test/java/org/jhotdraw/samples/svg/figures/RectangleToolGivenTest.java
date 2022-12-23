@@ -1,9 +1,6 @@
 package org.jhotdraw.samples.svg.figures;
 
 import com.tngtech.jgiven.junit.ScenarioTest;
-import org.jhotdraw.samples.svg.figures.JGivenEllipse.GivenEllipseTool;
-import org.jhotdraw.samples.svg.figures.JGivenEllipse.ThenEllipseShouldBeCreated;
-import org.jhotdraw.samples.svg.figures.JGivenEllipse.WhenUserCreatesEllipse;
 import org.jhotdraw.samples.svg.figures.JGivenRectangle.GivenRectangleToolIsSelected;
 import org.jhotdraw.samples.svg.figures.JGivenRectangle.ThenARectangleShouldBeCreated;
 import org.jhotdraw.samples.svg.figures.JGivenRectangle.WhenUserUsesRectangleTool;
