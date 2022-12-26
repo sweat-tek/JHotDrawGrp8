@@ -10,13 +10,16 @@ package org.jhotdraw.samples.svg.figures;
 import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.AbstractAttributedCompositeFigure;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.*;
+
 import org.jhotdraw.draw.*;
+
 import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.PATH_CLOSED;
 import static org.jhotdraw.draw.AttributeKeys.STROKE_CAP;
@@ -24,6 +27,7 @@ import static org.jhotdraw.draw.AttributeKeys.STROKE_JOIN;
 import static org.jhotdraw.draw.AttributeKeys.STROKE_MITER_LIMIT;
 import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
 import static org.jhotdraw.draw.AttributeKeys.WINDING_RULE;
+
 import org.jhotdraw.draw.AttributeKeys.WindingRule;
 import org.jhotdraw.draw.handle.Handle;
 import org.jhotdraw.draw.handle.TransformHandleKit;
@@ -32,7 +36,9 @@ import org.jhotdraw.geom.GrowStroke;
 import org.jhotdraw.geom.Shapes;
 import org.jhotdraw.samples.svg.Gradient;
 import org.jhotdraw.samples.svg.SVGAttributeKeys;
+
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+
 import org.jhotdraw.samples.svg.action.linetool.*;
 import org.jhotdraw.util.*;
 
@@ -74,7 +80,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         setConnectable(false);
     }
 
-    @FeatureEntryPoint(value="lineTool")
+    @FeatureEntryPoint(value = "lineTool")
     @Override
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
@@ -225,12 +231,11 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 return true;
             }
             double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) /**
-                     * 2d
-                     */
-                    ;
+             * 2d
+             */;
             GrowStroke gs = new GrowStroke(grow,
                     (AttributeKeys.getStrokeTotalWidth(this, 1.0)
-                    * get(STROKE_MITER_LIMIT)));
+                            * get(STROKE_MITER_LIMIT)));
             if (gs.createStrokedShape(getPath()).contains(p)) {
                 return true;
             } else {
@@ -310,10 +315,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             paths.add(getChild(i).getTransformRestoreData());
         }
         return new Object[]{
-            paths,
-            TRANSFORM.getClone(this),
-            FILL_GRADIENT.getClone(this),
-            STROKE_GRADIENT.getClone(this)
+                paths,
+                TRANSFORM.getClone(this),
+                FILL_GRADIENT.getClone(this),
+                STROKE_GRADIENT.getClone(this)
         };
     }
 
@@ -336,23 +341,20 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
-        LinkedList<Handle> handles = new LinkedList<Handle>();
-        switch (detailLevel % 2) {
-            case -1: // Mouse hover handles
-                handles.add(new SVGPathOutlineHandle(this, true));
-                break;
-            case 0:
-                handles.add(new SVGPathOutlineHandle(this));
-                for (Figure child : getChildren()) {
-                    handles.addAll(((SVGBezierFigure) child).createHandles(this, detailLevel));
-                }
-                handles.add(new LinkHandle(this));
-                break;
-            case 1:
-                TransformHandleKit.addTransformHandles(this, handles);
-                break;
-            default:
-                break;
+        LinkedList<Handle> handles = new LinkedList<>();
+        int condition = detailLevel % 2;
+        if (condition == -1) {
+            handles.add(new SVGPathOutlineHandle(this, true));
+        }
+        if (condition == 0) {
+            handles.add(new SVGPathOutlineHandle(this));
+            for (Figure child : getChildren()) {
+                handles.addAll(((SVGBezierFigure) child).createHandles(this, detailLevel));
+            }
+            handles.add(new LinkHandle(this));
+        }
+        if (condition == 1) {
+            TransformHandleKit.addTransformHandles(this, handles);
         }
         return handles;
     }
@@ -380,11 +382,12 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     // CONNECTING
     // EDITING
+
     /**
      * Handles a mouse click.
      */
     @Override
-    @FeatureEntryPoint(value="lineTool")
+    @FeatureEntryPoint(value = "lineTool")
     public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
         if (evt.getClickCount() == 2 && view.getHandleDetailLevel() % 2 == 0) {
             for (Figure child : getChildren()) {
