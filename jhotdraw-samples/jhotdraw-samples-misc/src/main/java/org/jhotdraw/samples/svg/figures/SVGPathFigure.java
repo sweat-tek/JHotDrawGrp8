@@ -59,7 +59,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * This is used to perform faster hit testing.
      */
     private transient Shape cachedHitShape;
-    private static final boolean DEBUG = false;
 
     /**
      * Creates a new instance.
@@ -155,28 +154,30 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        if (cachedDrawingArea == null) {
-            double strokeTotalWidth = Math.max(1d, AttributeKeys.getStrokeTotalWidth(this, 1.0));
-            double width = strokeTotalWidth / 2d;
-            if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-                width *= get(STROKE_MITER_LIMIT);
-            } else if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
-                width += strokeTotalWidth * 2;
-            }
-            Shape gp = getPath();
-            Rectangle2D strokeRect = new Rectangle2D.Double(0, 0, width, width);
-            AffineTransform tx = get(TRANSFORM);
-            if (tx != null) {
-                // We have to use the (rectangular) bounds of the path here,
-                // because we draw a rectangular handle over the shape of the figure
-                gp = tx.createTransformedShape(gp.getBounds2D());
-                strokeRect = tx.createTransformedShape(strokeRect).getBounds2D();
-            }
-            Rectangle2D rx = gp.getBounds2D();
-            Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
-            Geom.grow(r, strokeRect.getWidth(), strokeRect.getHeight());
-            cachedDrawingArea = r;
+        if (cachedDrawingArea != null) {
+            return (Rectangle2D.Double) cachedDrawingArea.clone();
         }
+        double strokeTotalWidth = Math.max(1d, AttributeKeys.getStrokeTotalWidth(this, 1.0));
+        double width = strokeTotalWidth / 2d;
+        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
+            width *= get(STROKE_MITER_LIMIT);
+        } else if (get(STROKE_CAP) != BasicStroke.CAP_BUTT) {
+            width += strokeTotalWidth * 2;
+        }
+        Shape gp = getPath();
+        Rectangle2D strokeRect = new Rectangle2D.Double(0, 0, width, width);
+        AffineTransform tx = get(TRANSFORM);
+        if (tx != null) {
+            // We have to use the (rectangular) bounds of the path here,
+            // because we draw a rectangular handle over the shape of the figure
+            gp = tx.createTransformedShape(gp.getBounds2D());
+            strokeRect = tx.createTransformedShape(strokeRect).getBounds2D();
+        }
+        Rectangle2D rx = gp.getBounds2D();
+        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
+        Geom.grow(r, strokeRect.getWidth(), strokeRect.getHeight());
+        cachedDrawingArea = r;
+
         return (Rectangle2D.Double) cachedDrawingArea.clone();
     }
 
@@ -328,7 +329,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new RemoveTransformAction(this, labels.getString("edit.removeTransform.text")));
             actions.add(new FlattenTransformAction(this, labels.getString("edit.flattenTransform.text")));
         }
-        if (getChild(getChildCount() - 1).get(PATH_CLOSED)) {
+        if (Boolean.TRUE.equals(getChild(getChildCount() - 1).get(PATH_CLOSED))) {
             actions.add(new OpenPathAction(this, labels.getString("attribute.openPath.text")));
         } else {
             actions.add(new ClosePathAction(this, labels.getString("attribute.closePath.text")));
@@ -343,7 +344,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     // CONNECTING
     // EDITING
-
     /**
      * Handles a mouse click.
      */
@@ -365,19 +365,13 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     }
 
     @Override
-    public void add(final int index, final Figure figure) {
-        super.add(index, (SVGBezierFigure) figure);
-    }
-
-    @Override
     public SVGBezierFigure getChild(int index) {
         return (SVGBezierFigure) super.getChild(index);
     }
 
     @Override
     public SVGPathFigure clone() {
-        SVGPathFigure that = (SVGPathFigure) super.clone();
-        return that;
+        return (SVGPathFigure) super.clone();
     }
 
     public void flattenTransform() {
@@ -385,7 +379,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         AffineTransform tx = get(TRANSFORM);
         if (tx != null) {
             for (Figure child : getChildren()) {
-                //((SVGBezierFigure) child).transform(tx);
                 ((SVGBezierFigure) child).flattenTransform();
             }
         }
