@@ -91,7 +91,7 @@ public abstract class AbstractFigure
         this.drawing = null;
     }
 
-    protected Drawing getDrawing() {
+    public Drawing getDrawing() {
         return drawing;
     }
 
@@ -309,7 +309,7 @@ public abstract class AbstractFigure
      * Notify all UndoableEditListener of the Drawing, to which this Figure has been added to. If
      * this Figure is not part of a Drawing, the event is lost.
      */
-    protected void fireUndoableEditHappened(UndoableEdit edit) {
+    public void fireUndoableEditHappened(UndoableEdit edit) {
         if (getDrawing() != null) {
             getDrawing().fireUndoableEditHappened(edit);
         }
