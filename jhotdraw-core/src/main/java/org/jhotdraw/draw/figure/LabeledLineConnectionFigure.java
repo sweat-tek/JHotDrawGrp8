@@ -65,7 +65,7 @@ public class LabeledLineConnectionFigure extends LineConnectionFigure
 
         @Override
         public void figureChanged(FigureEvent e) {
-            if (!owner.isChanging()) {
+            if (owner.isNotChanging()) {
                 owner.willChange();
                 owner.fireFigureChanged(e);
                 owner.changed();
@@ -74,7 +74,7 @@ public class LabeledLineConnectionFigure extends LineConnectionFigure
 
         @Override
         public void areaInvalidated(FigureEvent e) {
-            if (!owner.isChanging()) {
+            if (owner.isNotChanging()) {
                 owner.fireAreaInvalidated(e.getInvalidatedArea());
             }
         }

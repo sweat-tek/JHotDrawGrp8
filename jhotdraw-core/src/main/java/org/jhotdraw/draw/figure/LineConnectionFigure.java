@@ -79,7 +79,7 @@ public class LineConnectionFigure extends LineFigure
 
         @Override
         public void figureChanged(FigureEvent e) {
-            if (!owner.isChanging()) {
+            if (owner.isNotChanging()) {
                 if (e.getSource() == owner.getStartFigure()
                         || e.getSource() == owner.getEndFigure()) {
                     owner.willChange();

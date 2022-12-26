@@ -345,8 +345,8 @@ public abstract class AbstractFigure
     protected void invalidate() {
     }
 
-    protected boolean isChanging() {
-        return changingDepth != 0;
+    protected boolean isNotChanging() {
+        return changingDepth == 0;
     }
 
     protected int getChangingDepth() {
