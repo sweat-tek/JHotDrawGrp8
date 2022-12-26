@@ -8,14 +8,12 @@
 package org.jhotdraw.draw.figure;
 
 import java.awt.*;
-import java.awt.geom.*;
 import java.io.*;
 import java.util.*;
 import org.jhotdraw.draw.AttributeKey;
 import org.jhotdraw.draw.AttributeKeys;
 import static org.jhotdraw.draw.AttributeKeys.*;
 import org.jhotdraw.geom.Dimension2DDouble;
-import org.jhotdraw.geom.Geom;
 import org.jhotdraw.xml.DOMInput;
 import org.jhotdraw.xml.DOMOutput;
 
@@ -39,22 +37,7 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
     /**
      * Creates a new instance.
      */
-    public AbstractAttributedCompositeFigure() {
-    }
-
-    public void setAttributeEnabled(AttributeKey<?> key, boolean b) {
-        if (forbiddenAttributes == null) {
-            forbiddenAttributes = new HashSet<>();
-        }
-        if (b) {
-            forbiddenAttributes.remove(key);
-        } else {
-            forbiddenAttributes.add(key);
-        }
-    }
-
-    public <T> boolean isAttributeEnabled(AttributeKey<?> key) {
-        return forbiddenAttributes == null || !forbiddenAttributes.contains(key);
+    protected AbstractAttributedCompositeFigure() {
     }
 
     @SuppressWarnings("unchecked")
@@ -66,7 +49,7 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
 
     @Override
     public Map<AttributeKey<?>, Object> getAttributes() {
-        return (Map<AttributeKey<?>, Object>) new HashMap<>(attributes);
+        return new HashMap<>(attributes);
     }
 
     /**
@@ -154,22 +137,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         return AttributeKeys.getStroke(this, 1.0);
     }
 
-    public double getStrokeMiterLimitFactor() {
-        Number value = (Number) get(AttributeKeys.STROKE_MITER_LIMIT);
-        return (value != null) ? value.doubleValue() : 10f;
-    }
-
-    public Rectangle2D.Double getFigureDrawBounds() {
-        double width = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
-        if (get(STROKE_JOIN) == BasicStroke.JOIN_MITER) {
-            width *= get(STROKE_MITER_LIMIT);
-        }
-        width++;
-        Rectangle2D.Double r = getBounds();
-        Geom.grow(r, width, width);
-        return r;
-    }
-
     /**
      * This method is called by method draw() to draw the fill
      * area of the figure. AttributedFigure configures the Graphics2D
@@ -178,12 +145,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
      */
     protected abstract void drawFill(java.awt.Graphics2D g);
 
-    /**
-     * This method is called by method draw() to draw the lines of the figure
-     * . AttributedFigure configures the Graphics2D object with
-     * the STROKE_COLOR attribute before calling this method.
-     * If the STROKE_COLOR attribute is null, this method is not called.
-     */
     /**
      * This method is called by method draw() to draw the text of the figure
      * . AttributedFigure configures the Graphics2D object with
@@ -257,16 +218,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
         return AttributeKeys.SUPPORTED_ATTRIBUTES_MAP.get(name);
     }
 
-    /**
-     * Applies all attributes of this figure to that figure.
-     */
-    @SuppressWarnings("unchecked")
-    protected void applyAttributesTo(Figure that) {
-        for (Map.Entry<AttributeKey<?>, Object> entry : attributes.entrySet()) {
-            that.set((AttributeKey<Object>) entry.getKey(), entry.getValue());
-        }
-    }
-
     @Override
     public void write(DOMOutput out) throws IOException {
         super.write(out);
@@ -277,14 +228,6 @@ public abstract class AbstractAttributedCompositeFigure extends AbstractComposit
     public void read(DOMInput in) throws IOException {
         super.read(in);
         readAttributes(in);
-    }
-
-    public <T> void removeAttribute(AttributeKey<T> key) {
-        if (hasAttribute(key)) {
-            T oldValue = get(key);
-            attributes.remove(key);
-            fireAttributeChanged(key, oldValue, key.getDefaultValue());
-        }
     }
 
     public <T> boolean hasAttribute(AttributeKey<T> key) {
