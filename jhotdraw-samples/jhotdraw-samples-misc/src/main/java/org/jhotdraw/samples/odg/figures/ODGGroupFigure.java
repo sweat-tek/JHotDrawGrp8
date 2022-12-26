@@ -18,6 +18,8 @@ import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
 import org.jhotdraw.draw.handle.Handle;
 import org.jhotdraw.draw.handle.TransformHandleKit;
 import org.jhotdraw.samples.odg.ODGAttributeKeys;
+import org.jhotdraw.samples.svg.figures.SVGUtil;
+
 import static org.jhotdraw.samples.odg.ODGAttributeKeys.*;
 
 /**
@@ -86,12 +88,7 @@ public class ODGGroupFigure extends GroupFigure implements ODGFigure {
                     gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
                     gr.setRenderingHints(g.getRenderingHints());
                     super.draw(gr);
-                    gr.dispose();
-                    Composite savedComposite = g.getComposite();
-                    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity));
-                    g.drawImage(buf, (int) drawingArea.x, (int) drawingArea.y,
-                            2 + (int) drawingArea.width, 2 + (int) drawingArea.height, null);
-                    g.setComposite(savedComposite);
+                    SVGUtil.handleDispose(g, (float) opacity, drawingArea, buf, gr);
                 }
             } else {
                 super.draw(g);

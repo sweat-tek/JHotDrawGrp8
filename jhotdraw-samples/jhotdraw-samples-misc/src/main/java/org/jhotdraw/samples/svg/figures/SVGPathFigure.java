@@ -14,7 +14,6 @@ import org.jhotdraw.draw.figure.AbstractAttributedCompositeFigure;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 import javax.swing.*;
 
@@ -55,7 +54,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * This cached path is used for drawing.
      */
     private transient Path2D.Double cachedPath;
-    // private transient Rectangle2D.Double cachedDrawingArea;
+
     /**
      * This is used to perform faster hit testing.
      */
@@ -83,36 +82,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     @FeatureEntryPoint(value = "lineTool")
     @Override
     public void draw(Graphics2D g) {
-        double opacity = get(OPACITY);
-        opacity = Math.min(Math.max(0d, opacity), 1d);
-        if (opacity != 0d) {
-            if (opacity != 1d) {
-                Rectangle2D.Double drawingArea = getDrawingArea();
-                Rectangle2D clipBounds = g.getClipBounds();
-                if (clipBounds != null) {
-                    Rectangle2D.intersect(drawingArea, clipBounds, drawingArea);
-                }
-                if (!drawingArea.isEmpty()) {
-                    BufferedImage buf = new BufferedImage(
-                            Math.max(1, (int) ((2 + drawingArea.width) * g.getTransform().getScaleX())),
-                            Math.max(1, (int) ((2 + drawingArea.height) * g.getTransform().getScaleY())),
-                            BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D gr = buf.createGraphics();
-                    gr.scale(g.getTransform().getScaleX(), g.getTransform().getScaleY());
-                    gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
-                    gr.setRenderingHints(g.getRenderingHints());
-                    drawFigure(gr);
-                    gr.dispose();
-                    Composite savedComposite = g.getComposite();
-                    g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacity));
-                    g.drawImage(buf, (int) drawingArea.x, (int) drawingArea.y,
-                            2 + (int) drawingArea.width, 2 + (int) drawingArea.height, null);
-                    g.setComposite(savedComposite);
-                }
-            } else {
-                drawFigure(g);
-            }
-        }
+        SVGUtil.draw(this, g);
     }
 
     @Override
@@ -183,7 +153,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         return cachedHitShape;
     }
 
-    // int count;
     @Override
     public Rectangle2D.Double getDrawingArea() {
         if (cachedDrawingArea == null) {
@@ -213,7 +182,6 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public boolean contains(Point2D.Double p) {
-        getPath();
         if (get(TRANSFORM) != null) {
             try {
                 p = (Point2D.Double) get(TRANSFORM).inverseTransform(p, new Point2D.Double());
@@ -230,9 +198,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             if (getPath().contains(p)) {
                 return true;
             }
-            double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) /**
-             * 2d
-             */;
+            double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0);
             GrowStroke gs = new GrowStroke(grow,
                     (AttributeKeys.getStrokeTotalWidth(this, 1.0)
                             * get(STROKE_MITER_LIMIT)));
@@ -244,12 +210,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 }
             }
         }
-        if (!isClosed) {
-            if (Shapes.outlineContains(getPath(), p, tolerance)) {
-                return true;
-            }
-        }
-        return false;
+        return Shapes.outlineContains(getPath(), p, tolerance);
     }
 
     @Override
@@ -310,7 +271,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
 
     @Override
     public Object getTransformRestoreData() {
-        ArrayList<Object> paths = new ArrayList<Object>(getChildCount());
+        ArrayList<Object> paths = new ArrayList<>(getChildCount());
         for (int i = 0, n = getChildCount(); i < n; i++) {
             paths.add(getChild(i).getTransformRestoreData());
         }
