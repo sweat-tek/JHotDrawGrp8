@@ -302,11 +302,11 @@ public abstract class AbstractFigure
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<>();
-        if(detailLevel == -1){
+        if (detailLevel == -1){
             handles.add(new BoundsOutlineHandle(this, false, true));
             return handles;
         }
-        if(detailLevel == 0) {
+        if (detailLevel == 0) {
             ResizeHandleKit.addResizeHandles(this, handles);
         }
         return handles;
@@ -317,9 +317,9 @@ public abstract class AbstractFigure
     public Cursor getCursor(Point2D.Double p) {
         if (contains(p)) {
             return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        } else {
-            return Cursor.getDefaultCursor();
         }
+        return Cursor.getDefaultCursor();
+
     }
 
     public final void setBounds(Rectangle2D.Double bounds) {
@@ -386,7 +386,6 @@ public abstract class AbstractFigure
     /**
      * Returns the Figures connector for the specified location. By default a ChopBoxConnector is
      * returned.
-     *
      *
      * @see ChopRectangleConnector
      */
