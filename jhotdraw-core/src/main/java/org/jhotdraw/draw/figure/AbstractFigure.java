@@ -214,10 +214,6 @@ public abstract class AbstractFigure
         }
     }
 
-    public void fireFigureChanged() {
-        fireFigureChanged(getDrawingArea());
-    }
-
     /**
      * Notify all listenerList that have registered interest for notification on this event type.
      */
@@ -276,30 +272,6 @@ public abstract class AbstractFigure
                         event = new FigureEvent(this, attribute, oldValue, newValue);
                     }
                     ((FigureListener) listeners[i + 1]).attributeChanged(event);
-                }
-            }
-        }
-    }
-
-    /**
-     * Notify all listenerList that have registered interest for notification on this event type.
-     */
-    protected void fireFigureHandlesChanged() {
-        Rectangle2D.Double changedArea = getDrawingArea();
-        if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, changedArea);
-                    }
-                    ((FigureListener) listeners[i + 1]).figureHandlesChanged(event);
                 }
             }
         }
@@ -523,24 +495,12 @@ public abstract class AbstractFigure
         return isSelectable;
     }
 
-    public void setSelectable(boolean newValue) {
-        boolean oldValue = isSelectable;
-        isSelectable = newValue;
-        firePropertyChange(SELECTABLE_PROPERTY, oldValue, newValue);
-    }
-
     /**
      * Checks whether this figure is removable. By default {@code AbstractFigure} can be removed.
      */
     @Override
     public boolean isRemovable() {
         return isRemovable;
-    }
-
-    public void setRemovable(boolean newValue) {
-        boolean oldValue = isRemovable;
-        isRemovable = newValue;
-        firePropertyChange(REMOVABLE_PROPERTY, oldValue, newValue);
     }
 
     /**
@@ -551,13 +511,7 @@ public abstract class AbstractFigure
     public boolean isTransformable() {
         return isTransformable;
     }
-
-    public void setTransformable(boolean newValue) {
-        boolean oldValue = isTransformable;
-        isTransformable = newValue;
-        firePropertyChange(TRANSFORMABLE_PROPERTY, oldValue, newValue);
-    }
-
+    
     /**
      * Checks whether this figure is visible. By default {@code AbstractFigure} is visible.
      */
