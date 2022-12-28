@@ -1,6 +1,5 @@
 package org.jhotdraw.samples.svg.figures;
 
-
 import org.jhotdraw.draw.handle.Handle;
 
 import org.junit.Before;
@@ -21,7 +20,6 @@ public class SVGPathFigureTest {
     @Before
     public void setup(){
         pathFigure = new SVGPathFigure();
-
     }
 
     @Test
