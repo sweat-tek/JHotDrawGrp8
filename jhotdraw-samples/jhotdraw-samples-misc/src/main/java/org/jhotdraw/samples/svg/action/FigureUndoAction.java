@@ -12,7 +12,7 @@ public class FigureUndoAction extends AbstractAction {
     private static final long serialVersionUID = 1L;
     private final AbstractFigure figure;
 
-    public FigureUndoAction(String name, AbstractFigure abstractFigure) {
+    public FigureUndoAction(AbstractFigure abstractFigure, String name) {
         super(name);
         this.figure = abstractFigure;
     }

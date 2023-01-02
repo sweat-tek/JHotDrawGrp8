@@ -9,7 +9,6 @@ package org.jhotdraw.samples.svg.figures;
 
 import org.jhotdraw.draw.figure.AbstractAttributedFigure;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.geom.*;
 import java.awt.image.*;
 import java.util.*;
@@ -107,7 +106,7 @@ public abstract class SVGAttributedFigure extends AbstractAttributedFigure {
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
             ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
+            actions.add(new FigureUndoAction(this, labels.getString("edit.removeTransform.text")));
         }
         return actions;
     }
