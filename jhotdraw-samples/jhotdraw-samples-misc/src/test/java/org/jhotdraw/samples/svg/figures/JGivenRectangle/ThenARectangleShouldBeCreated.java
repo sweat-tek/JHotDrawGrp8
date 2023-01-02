@@ -15,7 +15,7 @@ public class ThenARectangleShouldBeCreated extends Stage<ThenARectangleShouldBeC
     private DefaultDrawingView defaultDrawingView;
 
     @Test
-    public ThenARectangleShouldBeCreated then_a_rectangle_should_be_created() {
+    public ThenARectangleShouldBeCreated a_rectangle_should_be_created() {
         List<Figure> figureList = defaultDrawingView.getDrawing().getFiguresFrontToBack();
         assertTrue(figureList.isEmpty() == false);
         Figure figure = figureList.get(0);

@@ -8,9 +8,9 @@ import org.junit.Test;
 
 public class RectangleToolGivenTest extends ScenarioTest<GivenRectangleToolIsSelected, WhenUserUsesRectangleTool, ThenARectangleShouldBeCreated> {
     @Test
-    public void create_ellipse() {
+    public void create_rectangle() {
         given().rectangle_tool_is_selected();
-        when().when_user_uses_rectangle_tool();
-        then().then_a_rectangle_should_be_created();
+        when().user_uses_rectangle_tool();
+        then().a_rectangle_should_be_created();
     }
 }

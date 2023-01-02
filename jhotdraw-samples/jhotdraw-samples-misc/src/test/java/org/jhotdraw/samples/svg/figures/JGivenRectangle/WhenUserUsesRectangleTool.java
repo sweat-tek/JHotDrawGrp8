@@ -17,7 +17,7 @@ public class WhenUserUsesRectangleTool extends Stage<WhenUserUsesRectangleTool> 
     private CreationTool creationTool;
 
     @Test
-    public WhenUserUsesRectangleTool when_user_uses_rectangle_tool() {
+    public WhenUserUsesRectangleTool user_uses_rectangle_tool() {
         creationTool.mousePressed(new MouseEvent(defaultDrawingView, MOUSE_PRESSED, 0, 0, 20, 20, 1, false, 1));
         return self();
     }
