@@ -69,34 +69,47 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
         }
     }
 
-    @Override
     @FeatureEntryPoint(value = "Grouping")
+    @Override
     public void draw(Graphics2D g) {
-        double opacity = get(OPACITY);
-        opacity = Math.min(Math.max(0d, opacity), 1d);
-        if (opacity != 0d) {
-            if (opacity != 1d) {
-                Rectangle2D.Double drawingArea = getDrawingArea();
-                Rectangle2D clipBounds = g.getClipBounds();
-                if (clipBounds != null) {
-                    Rectangle2D.intersect(drawingArea, clipBounds, drawingArea);
-                }
-                if (!drawingArea.isEmpty()) {
-                    BufferedImage buf = new BufferedImage(
-                            Math.max(1, (int) ((2 + drawingArea.width) * g.getTransform().getScaleX())),
-                            Math.max(1, (int) ((2 + drawingArea.height) * g.getTransform().getScaleY())),
-                            BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D gr = buf.createGraphics();
-                    gr.scale(g.getTransform().getScaleX(), g.getTransform().getScaleY());
-                    gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
-                    gr.setRenderingHints(g.getRenderingHints());
-                    super.draw(gr);
-                    SVGUtil.handleDispose(g, (float) opacity, drawingArea, buf, gr);
-                }
-            } else {
-                super.draw(g);
-            }
+        double opacity = Math.min(Math.max(0d, get(OPACITY)), 1d);
+
+        if (opacity == 0d) {
+            return;
         }
+
+        if (opacity == 1d) {
+            super.draw(g);
+            return;
+        }
+
+        Rectangle2D.Double drawingArea = getDrawingArea();
+        Rectangle2D clipBounds = g.getClipBounds();
+
+        if (clipBounds != null) {
+            Rectangle2D.intersect(drawingArea, clipBounds, drawingArea);
+        }
+        if (!drawingArea.isEmpty()) {
+            double scaleX = g.getTransform().getScaleX();
+            double scaleY = g.getTransform().getScaleY();
+            final int minDrawWidth = 2;
+            final int minDrawHeight = 2;
+
+            BufferedImage buf = new BufferedImage(
+                    getSize(drawingArea.width, scaleX, minDrawWidth),
+                    getSize(drawingArea.height, scaleY, minDrawHeight),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D gr = buf.createGraphics();
+            gr.scale(scaleX, scaleY);
+            gr.translate((int) -drawingArea.x, (int) -drawingArea.y);
+            gr.setRenderingHints(g.getRenderingHints());
+            super.draw(gr);
+            SVGUtil.handleDispose(g, (float) opacity, drawingArea, buf, gr);
+        }
+    }
+
+    private int getSize(double area, double scale, int drawScale) {
+        return Math.max(1, (int) ((drawScale + area) * scale));
     }
 
     @Override
@@ -145,8 +158,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
     public String toString() {
         StringBuilder buf = new StringBuilder();
         buf.append(getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1));
-        buf.append('@');
-        buf.append(hashCode());
+        buf.append('@' + hashCode());
         if (getChildCount() > 0) {
             buf.append('(');
             for (Iterator<Figure> i = getChildren().iterator(); i.hasNext();) {
@@ -164,7 +176,7 @@ public class SVGGroupFigure extends GroupFigure implements SVGFigure {
     @Override
     public SVGGroupFigure clone() {
         SVGGroupFigure that = (SVGGroupFigure) super.clone();
-        that.attributes = new HashMap<AttributeKey<?>, Object>(this.attributes);
+        that.attributes = this.attributes;
         return that;
     }
 }
