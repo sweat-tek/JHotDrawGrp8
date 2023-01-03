@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import org.jhotdraw.draw.*;
+
 import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
 import org.jhotdraw.draw.event.TransformRestoreEdit;
 import org.jhotdraw.draw.handle.BoundsOutlineHandle;
@@ -263,7 +263,7 @@ public class SVGImageFigure extends SVGAttributedFigure implements SVGFigure, Im
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
-            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
+            actions.add(new FigureUndoAction(this, labels.getString("edit.removeTransform.text")));
         }
         if (bufferedImage != null) {
             if (rectangle.width != bufferedImage.getWidth()

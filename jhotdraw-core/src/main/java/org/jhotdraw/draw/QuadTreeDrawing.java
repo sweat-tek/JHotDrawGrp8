@@ -310,7 +310,7 @@ public class QuadTreeDrawing extends AbstractDrawing {
 
         @Override
         public void figureChanged(FigureEvent e) {
-            if (!isChanging()) {
+            if (isNotChanging()) {
                 quadTree.remove(e.getFigure());
                 quadTree.add(e.getFigure(), e.getFigure().getDrawingArea());
                 needsSorting = true;
