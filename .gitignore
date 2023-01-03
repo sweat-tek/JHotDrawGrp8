@@ -1,6 +1,8 @@
 /jhotdraw7/build/
 /jhotdraw7/dist/
 /jhotdraw7/nbproject/private/
+/jhotdraw-samples/jhotdraw-samples-misc/FeatureTraces/
+/.idea/misc.xml
 target
 *.patch
 *.class
@@ -10,3 +12,4 @@ nb-configuration.xml
 .DS_Store
 
 .Idea
+**/.idea

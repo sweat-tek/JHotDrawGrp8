@@ -7,6 +7,7 @@
  */
 package org.jhotdraw.samples.svg.figures;
 
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.figure.Figure;
 import org.jhotdraw.draw.figure.AbstractAttributedCompositeFigure;
 import java.awt.*;
@@ -33,6 +34,8 @@ import org.jhotdraw.geom.Shapes;
 import org.jhotdraw.samples.svg.Gradient;
 import org.jhotdraw.samples.svg.SVGAttributeKeys;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+
+import org.jhotdraw.samples.svg.action.FigureUndoAction;
 import org.jhotdraw.util.*;
 
 /**
@@ -58,11 +61,13 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
     /**
      * Creates a new instance.
      */
+    @FeatureEntryPoint(value = "lineTool")
     public SVGPathFigure() {
         add(new SVGBezierFigure());
         SVGAttributeKeys.setDefaults(this);
     }
 
+    @FeatureEntryPoint(value = "lineTool")
     public SVGPathFigure(boolean isEmpty) {
         if (!isEmpty) {
             add(new SVGBezierFigure());
@@ -71,6 +76,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         setConnectable(false);
     }
 
+    @FeatureEntryPoint(value="lineTool")
     @Override
     public void draw(Graphics2D g) {
         double opacity = get(OPACITY);
@@ -224,12 +230,12 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 return true;
             }
             double grow = AttributeKeys.getPerpendicularHitGrowth(this, 1.0) /**
-             * 2d
-             */
+                     * 2d
+                     */
                     ;
             GrowStroke gs = new GrowStroke(grow,
                     (AttributeKeys.getStrokeTotalWidth(this, 1.0)
-                            * get(STROKE_MITER_LIMIT)));
+                    * get(STROKE_MITER_LIMIT)));
             if (gs.createStrokedShape(getPath()).contains(p)) {
                 return true;
             } else {
@@ -309,10 +315,10 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             paths.add(getChild(i).getTransformRestoreData());
         }
         return new Object[]{
-                paths,
-                TRANSFORM.getClone(this),
-                FILL_GRADIENT.getClone(this),
-                STROKE_GRADIENT.getClone(this)
+            paths,
+            TRANSFORM.getClone(this),
+            FILL_GRADIENT.getClone(this),
+            STROKE_GRADIENT.getClone(this)
         };
     }
 
@@ -361,17 +367,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
         final ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
-            actions.add(new AbstractAction(labels.getString("edit.removeTransform.text")) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    willChange();
-                    fireUndoableEditHappened(
-                            TRANSFORM.setUndoable(SVGPathFigure.this, null));
-                    changed();
-                }
-            });
+            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
             actions.add(new AbstractAction(labels.getString("edit.flattenTransform.text")) {
                 private static final long serialVersionUID = 1L;
 
@@ -416,6 +412,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
             actions.add(new AbstractAction(labels.getString("attribute.openPath.text")) {
                 private static final long serialVersionUID = 1L;
 
+
                 @Override
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
@@ -431,6 +428,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 private static final long serialVersionUID = 1L;
 
                 @Override
+                @FeatureEntryPoint(value="lineTool")
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
                     for (Figure child : getChildren()) {
@@ -446,6 +444,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
                 private static final long serialVersionUID = 1L;
 
                 @Override
+                @FeatureEntryPoint(value="lineTool")
                 public void actionPerformed(ActionEvent evt) {
                     willChange();
                     getDrawing().fireUndoableEditHappened(
@@ -476,6 +475,7 @@ public class SVGPathFigure extends AbstractAttributedCompositeFigure implements 
      * Handles a mouse click.
      */
     @Override
+    @FeatureEntryPoint(value="lineTool")
     public boolean handleMouseClick(Point2D.Double p, MouseEvent evt, DrawingView view) {
         if (evt.getClickCount() == 2 && view.getHandleDetailLevel() % 2 == 0) {
             for (Figure child : getChildren()) {

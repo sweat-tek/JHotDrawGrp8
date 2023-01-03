@@ -19,6 +19,8 @@ import static org.jhotdraw.draw.AttributeKeys.STROKE_WIDTH;
 import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
 import org.jhotdraw.samples.svg.SVGAttributeKeys;
 import static org.jhotdraw.samples.svg.SVGAttributeKeys.*;
+
+import org.jhotdraw.samples.svg.action.FigureUndoAction;
 import org.jhotdraw.util.*;
 
 /**
@@ -110,18 +112,7 @@ public abstract class SVGAttributedFigure extends AbstractAttributedFigure {
         LinkedList<Action> actions = new LinkedList<Action>();
         if (get(TRANSFORM) != null) {
             ResourceBundleUtil labels = ResourceBundleUtil.getBundle("org.jhotdraw.samples.svg.Labels");
-            actions.add(new AbstractAction(labels.getString("edit.removeTransform.text")) {
-                private static final long serialVersionUID = 1L;
-
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    willChange();
-                    fireUndoableEditHappened(
-                            TRANSFORM.setUndoable(SVGAttributedFigure.this, null)
-                    );
-                    changed();
-                }
-            });
+            actions.add(new FigureUndoAction(labels.getString("edit.removeTransform.text"), this));
         }
         return actions;
     }

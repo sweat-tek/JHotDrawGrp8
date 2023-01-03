@@ -10,12 +10,12 @@ package org.jhotdraw.samples.svg.figures;
 import java.awt.*;
 import java.awt.geom.*;
 import java.util.*;
+
+import dk.sdu.mmmi.featuretracer.lib.FeatureEntryPoint;
 import org.jhotdraw.draw.*;
 import static org.jhotdraw.draw.AttributeKeys.FILL_COLOR;
 import static org.jhotdraw.draw.AttributeKeys.TRANSFORM;
-import org.jhotdraw.draw.handle.BoundsOutlineHandle;
 import org.jhotdraw.draw.handle.Handle;
-import org.jhotdraw.draw.handle.ResizeHandleKit;
 import org.jhotdraw.draw.handle.TransformHandleKit;
 import org.jhotdraw.geom.Geom;
 import org.jhotdraw.geom.GrowStroke;
@@ -45,10 +45,12 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     /**
      * Creates a new instance.
      */
+
     public SVGEllipseFigure() {
         this(0, 0, 0, 0);
     }
 
+    @FeatureEntryPoint(value = "Ellipse")
     public SVGEllipseFigure(double x, double y, double width, double height) {
         ellipse = new Ellipse2D.Double(x, y, width, height);
         SVGAttributeKeys.setDefaults(this);
@@ -64,6 +66,7 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
     @Override
+    @FeatureEntryPoint(value = "Ellipse")
     protected void drawStroke(Graphics2D g) {
         if (ellipse.width > 0 && ellipse.height > 0) {
             g.draw(ellipse);
@@ -94,18 +97,15 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
 
     @Override
     public Rectangle2D.Double getDrawingArea() {
-        Rectangle2D rx = getTransformedShape().getBounds2D();
-        Rectangle2D.Double r = (rx instanceof Rectangle2D.Double) ? (Rectangle2D.Double) rx : new Rectangle2D.Double(rx.getX(), rx.getY(), rx.getWidth(), rx.getHeight());
-        if (get(TRANSFORM) == null) {
-            double g = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1;
-            Geom.grow(r, g, g);
-        } else {
-            double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0);
-            double width = strokeTotalWidth / 2d;
-            width *= Math.max(get(TRANSFORM).getScaleX(), get(TRANSFORM).getScaleY()) + 1;
-            Geom.grow(r, width, width);
+        Rectangle2D.Double boundingBox = (Rectangle2D.Double) getTransformedShape().getBounds2D();
+        double size = SVGAttributeKeys.getPerpendicularHitGrowth(this, 1.0) * 2d + 1;
+        AffineTransform transform = get(TRANSFORM);
+        if (transform != null) {
+            double strokeTotalWidth = AttributeKeys.getStrokeTotalWidth(this, 1.0) / 2d;
+            size = strokeTotalWidth * Math.max(transform.getScaleX(), transform.getScaleY()) + 1;
         }
-        return r;
+        Geom.grow(boundingBox, size, size);
+        return boundingBox;
     }
 
     /**
@@ -117,27 +117,26 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     }
 
     private Shape getTransformedShape() {
-        if (cachedTransformedShape == null) {
-            if (get(TRANSFORM) == null) {
-                cachedTransformedShape = ellipse;
-            } else {
-                cachedTransformedShape = get(TRANSFORM).createTransformedShape(ellipse);
-            }
+        if (cachedTransformedShape != null) {
+            return cachedTransformedShape;
         }
-        return cachedTransformedShape;
+        if (get(TRANSFORM) == null) {
+            return cachedTransformedShape = ellipse;
+        }
+        return cachedTransformedShape = get(TRANSFORM).createTransformedShape(ellipse);
     }
 
     private Shape getHitShape() {
-        if (cachedHitShape == null) {
-            if (get(FILL_COLOR) != null || get(FILL_GRADIENT) != null) {
-                cachedHitShape = new GrowStroke(
-                        (float) SVGAttributeKeys.getStrokeTotalWidth(this, 1.0) / 2f,
-                        (float) SVGAttributeKeys.getStrokeTotalMiterLimit(this, 1.0)).createStrokedShape(getTransformedShape());
-            } else {
-                cachedHitShape = SVGAttributeKeys.getHitStroke(this, 1.0).createStrokedShape(getTransformedShape());
-            }
+        if (cachedHitShape != null) {
+            return cachedHitShape;
         }
-        return cachedHitShape;
+        if (get(FILL_COLOR) != null || get(FILL_GRADIENT) != null) {
+            double grow = SVGAttributeKeys.getStrokeTotalWidth(this, 1.0) / 2f;
+            double miterLimit = SVGAttributeKeys.getStrokeTotalMiterLimit(this, 1.0);
+            return cachedHitShape = new GrowStroke(grow, miterLimit).createStrokedShape(getTransformedShape());
+        }
+        return cachedHitShape = SVGAttributeKeys.getHitStroke(this, 1.0).createStrokedShape(getTransformedShape());
+
     }
 
     @Override
@@ -156,35 +155,50 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
      */
     @Override
     public void transform(AffineTransform tx) {
-        if (get(TRANSFORM) != null
-                || (tx.getType() & (AffineTransform.TYPE_TRANSLATION)) != tx.getType()) {
-            if (get(TRANSFORM) == null) {
+        AffineTransform tForm = get(TRANSFORM);
+        int txType = tx.getType();
+        if ((txType & (AffineTransform.TYPE_TRANSLATION)) != txType) {
+            if (tForm == null) {
                 TRANSFORM.setClone(this, tx);
-            } else {
-                AffineTransform t = TRANSFORM.getClone(this);
-                t.preConcatenate(tx);
-                set(TRANSFORM, t);
-            }
-        } else {
-            Point2D.Double anchor = getStartPoint();
-            Point2D.Double lead = getEndPoint();
-            setBounds(
-                    (Point2D.Double) tx.transform(anchor, anchor),
-                    (Point2D.Double) tx.transform(lead, lead));
-            if (get(FILL_GRADIENT) != null
-                    && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
-                Gradient g = FILL_GRADIENT.getClone(this);
-                g.transform(tx);
-                set(FILL_GRADIENT, g);
-            }
-            if (get(STROKE_GRADIENT) != null
-                    && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
-                Gradient g = STROKE_GRADIENT.getClone(this);
-                g.transform(tx);
-                set(STROKE_GRADIENT, g);
+                invalidate();
+                return;
             }
         }
+        if (tForm != null) {
+            AffineTransform transform = TRANSFORM.getClone(this);
+            transform.preConcatenate(tx);
+            set(TRANSFORM, transform);
+            invalidate();
+            return;
+        }
+        transformBounds(tx);
+        transformGradients(tx);
         invalidate();
+    }
+    private void transformBounds(AffineTransform tx) {
+        Point2D.Double anchor = getStartPoint();
+        Point2D.Double lead = getEndPoint();
+        Point2D.Double transformedAnchor = (Point2D.Double) tx.transform(anchor, anchor);
+        Point2D.Double transformedLead = (Point2D.Double) tx.transform(lead, lead);
+        setBounds(transformedAnchor, transformedLead);
+    }
+    private void transformGradients(AffineTransform tx) {
+        AttributeKey<Gradient> gradientTransformType = null;
+        if (get(FILL_GRADIENT) != null && !get(FILL_GRADIENT).isRelativeToFigureBounds()) {
+            gradientTransformType = FILL_GRADIENT;
+        }
+        if (get(STROKE_GRADIENT) != null && !get(STROKE_GRADIENT).isRelativeToFigureBounds()) {
+            gradientTransformType = STROKE_GRADIENT;
+        }
+
+        if (gradientTransformType != null) {
+            transformSpecificGradient(gradientTransformType, tx);
+        }
+    }
+    private void transformSpecificGradient(AttributeKey<Gradient> type, AffineTransform tx) {
+        Gradient g = type.getClone(this);
+        g.transform(tx);
+        set(type, g);
     }
 
     @Override
@@ -210,21 +224,17 @@ public class SVGEllipseFigure extends SVGAttributedFigure implements SVGFigure {
     // EDITING
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
-        LinkedList<Handle> handles = new LinkedList<Handle>();
-        switch (detailLevel % 2) {
-            case -1: // Mouse hover handles
-                handles.add(new BoundsOutlineHandle(this, false, true));
-                break;
-            case 0:
-                ResizeHandleKit.addResizeHandles(this, handles);
-                handles.add(new LinkHandle(this));
-                break;
-            case 1:
-                TransformHandleKit.addTransformHandles(this, handles);
-                break;
-            default:
-                break;
+        int handlesDetailLevel = detailLevel % 2;
+        LinkedList<Handle> handles = (LinkedList<Handle>) super.createHandles(handlesDetailLevel);
+
+        if (handlesDetailLevel == 0) {
+            handles.add(new LinkHandle(this));
         }
+
+        if (handlesDetailLevel == 1) {
+            TransformHandleKit.addTransformHandles(this, handles);
+        }
+
         return handles;
     }
 
