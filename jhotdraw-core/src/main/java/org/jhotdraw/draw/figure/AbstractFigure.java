@@ -58,7 +58,7 @@ public abstract class AbstractFigure
     /**
      * Creates a new instance.
      */
-    public AbstractFigure() {
+    protected AbstractFigure() {
     }
 
     // DRAWING
@@ -91,7 +91,7 @@ public abstract class AbstractFigure
         this.drawing = null;
     }
 
-    protected Drawing getDrawing() {
+    public Drawing getDrawing() {
         return drawing;
     }
 
@@ -214,10 +214,6 @@ public abstract class AbstractFigure
         }
     }
 
-    public void fireFigureChanged() {
-        fireFigureChanged(getDrawingArea());
-    }
-
     /**
      * Notify all listenerList that have registered interest for notification on this event type.
      */
@@ -282,30 +278,6 @@ public abstract class AbstractFigure
     }
 
     /**
-     * Notify all listenerList that have registered interest for notification on this event type.
-     */
-    protected void fireFigureHandlesChanged() {
-        Rectangle2D.Double changedArea = getDrawingArea();
-        if (listenerList.getListenerCount() > 0) {
-            FigureEvent event = null;
-            // Notify all listeners that have registered interest for
-            // Guaranteed to return a non-null array
-            Object[] listeners = listenerList.getListenerList();
-            // Process the listeners last to first, notifying
-            // those that are interested in this event
-            for (int i = listeners.length - 2; i >= 0; i -= 2) {
-                if (listeners[i] == FigureListener.class) {
-                    // Lazily create the event:
-                    if (event == null) {
-                        event = new FigureEvent(this, changedArea);
-                    }
-                    ((FigureListener) listeners[i + 1]).figureHandlesChanged(event);
-                }
-            }
-        }
-    }
-
-    /**
      * Notify all UndoableEditListener of the Drawing, to which this Figure has been added to. If
      * this Figure is not part of a Drawing, the event is lost.
      */
@@ -315,11 +287,6 @@ public abstract class AbstractFigure
         }
     }
 
-    /*
-     public Set createHandles() {
-     return new HashSet();
-     }
-     */
     @Override
     public AbstractFigure clone() {
         AbstractFigure that = (AbstractFigure) super.clone();
@@ -335,24 +302,24 @@ public abstract class AbstractFigure
     @Override
     public Collection<Handle> createHandles(int detailLevel) {
         LinkedList<Handle> handles = new LinkedList<>();
-        switch (detailLevel) {
-            case -1:
-                handles.add(new BoundsOutlineHandle(this, false, true));
-                break;
-            case 0:
-                ResizeHandleKit.addResizeHandles(this, handles);
-                break;
+        if (detailLevel == -1){
+            handles.add(new BoundsOutlineHandle(this, false, true));
+            return handles;
+        }
+        if (detailLevel == 0) {
+            ResizeHandleKit.addResizeHandles(this, handles);
         }
         return handles;
+
     }
 
     @Override
     public Cursor getCursor(Point2D.Double p) {
         if (contains(p)) {
             return Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-        } else {
-            return Cursor.getDefaultCursor();
         }
+        return Cursor.getDefaultCursor();
+
     }
 
     public final void setBounds(Rectangle2D.Double bounds) {
@@ -378,8 +345,8 @@ public abstract class AbstractFigure
     protected void invalidate() {
     }
 
-    protected boolean isChanging() {
-        return changingDepth != 0;
+    protected boolean isNotChanging() {
+        return changingDepth == 0;
     }
 
     protected int getChangingDepth() {
@@ -419,7 +386,6 @@ public abstract class AbstractFigure
     /**
      * Returns the Figures connector for the specified location. By default a ChopBoxConnector is
      * returned.
-     *
      *
      * @see ChopRectangleConnector
      */
@@ -489,11 +455,6 @@ public abstract class AbstractFigure
         return new Point2D.Double(r.x, r.y);
     }
 
-    /*
-     public Rectangle2D.Double getHitBounds() {
-     return getBounds();
-     }
-     */
     @Override
     public Dimension2DDouble getPreferredSize() {
         Rectangle2D.Double r = getBounds();
@@ -523,24 +484,12 @@ public abstract class AbstractFigure
         return isSelectable;
     }
 
-    public void setSelectable(boolean newValue) {
-        boolean oldValue = isSelectable;
-        isSelectable = newValue;
-        firePropertyChange(SELECTABLE_PROPERTY, oldValue, newValue);
-    }
-
     /**
      * Checks whether this figure is removable. By default {@code AbstractFigure} can be removed.
      */
     @Override
     public boolean isRemovable() {
         return isRemovable;
-    }
-
-    public void setRemovable(boolean newValue) {
-        boolean oldValue = isRemovable;
-        isRemovable = newValue;
-        firePropertyChange(REMOVABLE_PROPERTY, oldValue, newValue);
     }
 
     /**
@@ -550,12 +499,6 @@ public abstract class AbstractFigure
     @Override
     public boolean isTransformable() {
         return isTransformable;
-    }
-
-    public void setTransformable(boolean newValue) {
-        boolean oldValue = isTransformable;
-        isTransformable = newValue;
-        firePropertyChange(TRANSFORMABLE_PROPERTY, oldValue, newValue);
     }
 
     /**
@@ -582,11 +525,7 @@ public abstract class AbstractFigure
     }
 
     protected FontRenderContext getFontRenderContext() {
-        FontRenderContext frc = null;
-        if (frc == null) {
-            frc = new FontRenderContext(new AffineTransform(), true, true);
-        }
-        return frc;
+        return new FontRenderContext(new AffineTransform(), true, true);
     }
 
     @Override
@@ -610,11 +549,9 @@ public abstract class AbstractFigure
 
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        buf.append(getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1));
-        buf.append('@');
-        buf.append(hashCode());
-        return buf.toString();
+        return getClass().getName().substring(getClass().getName().lastIndexOf('.') + 1) +
+                '@' +
+                hashCode();
     }
 
     @Override

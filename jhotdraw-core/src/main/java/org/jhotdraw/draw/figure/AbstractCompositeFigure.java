@@ -78,7 +78,7 @@ public abstract class AbstractCompositeFigure
 
         @Override
         public void figureChanged(FigureEvent e) {
-            if (!isChanging()) {
+            if (isNotChanging()) {
                 Rectangle2D.Double invalidatedArea = getDrawingArea();
                 invalidatedArea.add(e.getInvalidatedArea());
                 // We call invalidate/validate here, because we must layout
